@@ -6,20 +6,22 @@ main() {
 	int number;
 	cout<<"enter your number five digits only";
 	cin >> number;
-    OddishOrEvenish(number);
+        int sum = OddishOrEvenish(number);
+	
 }
 int OddishOrEvenish(int number) {
-	int n = 4;
-	while (n>1) {
-	int sum_a = 0;
-	int number = number%(10*n)
-	n = n-1;
-	int single = number / (10*n);
-	sum_a = single + sum_a;
-	return sum;
-	}
+	int first_digit = number/10000;
+	int last_four_numbers = number%10000;
+	int second_digit = last_four_numbers / 1000;
+	int last_three_numbers = last_four_numbers % 1000;
+	int third_digit = last_three_numbers/100;
+	int last_two_digits = last_three_numbers%100;
+	int fourth_digit = last_two_digit/10;
+	int last_digit = last_two_digit%10;
+	int sum = first_digit+second_digit+third_digit+fourth_digit+last_digit;
+	if (sum/2 == 0) {cout<<"Number is Even";}
+	if (sum/2 != 0) {cout<<"Number is Odd";}
 	return 0;
-	
 	
 }
 
