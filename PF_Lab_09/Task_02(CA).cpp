@@ -1,3 +1,5 @@
+// prints second and fourth element in a given array
+
 #include <iostream>
 using namespace std;
 main() {

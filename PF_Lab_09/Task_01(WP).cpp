@@ -1,3 +1,4 @@
+// adding and printing elements of an array
 #include <iostream>
 using namespace std;
 main() {
