@@ -1,26 +1,30 @@
+
 #include <iostream>
 using namespace std;
-main() {
+main()
+{
     string string_1;
     string string_2;
-    cout<<"Enter string number one: ";
+    char string_3[100];
+    cout << "Enter string number one: ";
     cin >> string_1;
-    cout<<"Enter string number two: ";
+    cout << "Enter string number two: ";
     cin >> string_2;
-    int same = 0;
+    int count = 0;
     for (int idx = 0; string_1[idx] != '\0'; idx++)
     {
-        for (int itx = 0; string_2[idx] != '\0'; itx++)
+
+        for (int itx = 0; string_2[itx] != '\0'; itx++)
         {
             if (string_1[idx] == string_2[itx])
-            {   
-                same =  same+1;
+            {
+                string_1[idx] = ' ';
+                string_2[itx] = ' ';
+                count = count + 1;
+
                 break;
             }
         }
     }
-    cout<<same;
-
-
-
+    cout << count;
 }
