@@ -1,3 +1,5 @@
+// Create a program that takes a string and print a new string with something on it
+
 #include <iostream>
 using namespace std;
 main()
@@ -6,15 +8,22 @@ main()
     cout<<"Enter Word: ";
     getline(cin, word);
     string s = "something ";
-    // for (int idx = 0; word[idx] != '\0';idx++)
-    // {
-    //     cout<<word[idx];
-        
-    // }
-    string add[2+1] = {s,word};
-    for (int idx = 0; add[idx] != "\0";idx++)
+    char output[100];
+    int index = 0;
+    for (int idx = 0; idx < 10;idx++)
     {
-        cout<<add[idx];
+        output[index] = s[idx];
+        index = index + 1;
+        
+        
     }
+    
+    for (int itx = 0; word[itx] != '\0';itx++)
+    {
+        output[index] = word[itx];
+        output[index+1]='\0';
+        index = index + 1;
+    }
+    cout<<output;
 
 }
