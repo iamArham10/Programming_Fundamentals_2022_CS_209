@@ -9,7 +9,8 @@ void distroy_pacman(int, int);
 void print_ghost(int, int);
 void erase_ghost(int, int);
 char getCharAtxy(short int x, short int y);
-string game_running = "true";
+bool game_running = true;
+int score = 0;
 int pacman_x = 5;
 int pacman_y = 6;
 
@@ -18,8 +19,6 @@ int ghost_1y = 1;
 
 int ghost_2x = 2;
 int ghost_2y = 8;
-
-int score = 0;
 main()
 {
     
@@ -27,10 +26,20 @@ main()
     maze();
     gotoxy(pacman_x, pacman_y);
     cout << "P";
-    while (game_running == "true")
+    if (game_running == false) {
+        cout<<"Your score was "<<score;
+
+    }
+    while (game_running)
     {
         char ghost1_nextLocation = getCharAtxy(ghost_1x, ghost_1y + 1);
         if (ghost1_nextLocation == ' ')
+        {
+            erase_ghost(ghost_1x, ghost_1y);
+            ghost_1y = ghost_1y + 1;
+            print_ghost(ghost_1x, ghost_1y);
+        }
+        if (ghost1_nextLocation == '.')
         {
             erase_ghost(ghost_1x, ghost_1y);
             ghost_1y = ghost_1y + 1;
@@ -41,8 +50,18 @@ main()
             ghost_1y = 1;
             print_ghost(ghost_1x, ghost_1y);
         }
+        if (ghost1_nextLocation == 'P') {
+                distroy_pacman(pacman_x,pacman_y);
+                
+                }
         char ghost2_nextLocation = getCharAtxy(ghost_2x + 1, ghost_2y);
         if (ghost2_nextLocation == ' ')
+        {
+            erase_ghost(ghost_2x, ghost_2y);
+            ghost_2x = ghost_2x + 1;
+            print_ghost(ghost_2x, ghost_2y);
+        }
+        if (ghost2_nextLocation == '.')
         {
             erase_ghost(ghost_2x, ghost_2y);
             ghost_2x = ghost_2x + 1;
@@ -53,6 +72,9 @@ main()
             ghost_2x = 2;
             print_ghost(ghost_2x,ghost_2y);
         }
+        if (ghost2_nextLocation == 'P') {
+                distroy_pacman(pacman_x,pacman_y);
+                }
 
         if (GetAsyncKeyState(VK_LEFT))
         {
@@ -70,10 +92,21 @@ main()
                     print_pacman(pacman_x, pacman_y);
                 }
             }
-            if (nextLocation == 'G') {
-                distroy_pacman(pacman_x,pacman_y);
-                game_running == "false";
+            if (nextLocation == '.')
+            {   
+                erase_pacman(pacman_x, pacman_y);
+                pacman_x = pacman_x - 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score+1;
             }
+            if (nextLocation == 'h')
+            {   
+                erase_pacman(pacman_x, pacman_y);
+                pacman_x = pacman_x - 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score+5;
+            }
+            
         }
         if (GetAsyncKeyState(VK_RIGHT))
         {
@@ -91,10 +124,21 @@ main()
                     print_pacman(pacman_x, pacman_y);
                 }
             }
-            if (nextLocation == 'G') {
-                distroy_pacman(pacman_x,pacman_y);
-                game_running == "false";
+            if (nextLocation == '.')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_x = pacman_x + 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 1;
             }
+            if (nextLocation == 'h')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_x = pacman_x + 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 5;
+            }
+            
         }
         if (GetAsyncKeyState(VK_UP))
         {
@@ -112,10 +156,21 @@ main()
                     print_pacman(pacman_x, pacman_y);
                 }
             }
-            if (nextLocation == 'G') {
-                distroy_pacman(pacman_x,pacman_y);
-                game_running == "false";
+            if (nextLocation == '.')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_y = pacman_y - 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 1;
             }
+            if (nextLocation == 'h')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_y = pacman_y - 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 5;
+            }
+            
         }
         if (GetAsyncKeyState(VK_DOWN))
         {
@@ -133,32 +188,51 @@ main()
                     print_pacman(pacman_x, pacman_y);
                 }
             }
-            if (nextLocation == 'G') {
-                distroy_pacman(pacman_x,pacman_y);
-                game_running == "false";
-                }
+            if (nextLocation == '.')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_y = pacman_y + 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 1;
+            }
+            if (nextLocation == 'h')
+            {
+                erase_pacman(pacman_x, pacman_y);
+                pacman_y = pacman_y + 1;
+                print_pacman(pacman_x, pacman_y);
+                score = score + 5;
+            }
+            
         }
+        gotoxy(25,28);
+        cout<<"Current Score"<<score;
         Sleep(100);
+    }
+    if (game_running == false) {
+        system("cls");
+        gotoxy(5,15);
+        cout<<"Your score was "<<score;
+
     }
 }
 
 void maze()
 {
     cout << "#####################################################" << endl;
+    cout << "#   ...........................  ................   #" << endl;
     cout << "#                                                   #" << endl;
+    cout << "# .........   h    ...................   h          #" << endl;
     cout << "#                                                   #" << endl;
+    cout << "#    ................................  ...          #" << endl;
     cout << "#                                                   #" << endl;
+    cout << "#   ....................      .................     #" << endl;
     cout << "#                                                   #" << endl;
+    cout << "#    h     .............................   h        #" << endl;
+    cout << "#  .............          ........................  #" << endl;
     cout << "#                                                   #" << endl;
+    cout << "#       ................................            #" << endl;
     cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
-    cout << "#                                                   #" << endl;
+    cout << "# ..............................   .............    #" << endl;
     cout << "#                                                   #" << endl;
     cout << "#####################################################";
 }
@@ -193,7 +267,7 @@ void distroy_pacman(int pacman_x,int pacman_y) {
     cout<<"X";
     gotoxy(pacman_x,pacman_y);
     cout<<" ";
-    Sleep(1000);
+    game_running = false;
 }
 void print_ghost(int ghostx, int ghosty)
 {
