@@ -150,8 +150,7 @@ main()
                                                     cout << endl << "press 0 to exit or any other key to try again";
                                                     char take_order_again = get_option();
                                                     if (take_order_again == '0')
-                                                    {
-                                                        
+                                                    {                              
                                                         Taking_order = false;
                                                     }
                                                 }
