@@ -1,1 +1,2 @@
-Panadol,200,150,200
+Panadol,150,99,4402
+Parcetamol,99,1500,750

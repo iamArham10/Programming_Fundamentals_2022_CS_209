@@ -138,6 +138,7 @@ main()
 
                                             if (isMedicinePresent(name))
                                             {
+                                                cout<<"Enter Quantity: ";
                                                 cin >> quantity;
                                                 if (Take_Order(name, quantity))
                                                 {
@@ -147,17 +148,19 @@ main()
                                                 else
                                                 {
 
-                                                    cout << endl << "press 0 to exit or any other key to try again";
+                                                    cout << endl
+                                                         << "press 0 to exit or any other key to try again";
                                                     char take_order_again = get_option();
                                                     if (take_order_again == '0')
-                                                    {                              
+                                                    {
                                                         Taking_order = false;
                                                     }
                                                 }
                                             }
-                                            else {
+                                            else if (!isMedicinePresent(name))
+                                            {
                                                 system("cls");
-                                                cout<<"Medicine not Available";
+                                                cout << "Medicine not Available";
                                                 Sleep(1000);
                                             }
                                         }
@@ -487,6 +490,7 @@ bool Take_Order(string name, string quantity)
 
         if (intquantity > intremainingmedicines)
         {
+            system("cls");
             cout << "Required medicine only has " << intremainingmedicines << " quantities available" << endl;
             return false;
         }
