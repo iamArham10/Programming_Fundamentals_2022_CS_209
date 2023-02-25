@@ -34,26 +34,23 @@ string integer_to_string(int quantity)
     int digit = 1;
 
     while (n > 0)
-    {   
-        
+    {
+
         if (n > 0 && n < 10)
         {
             break;
         }
-        n = n/10;
+        n = n / 10;
         digit = digit * 10;
-
     }
 
     while (quantity > 0)
     {
-        word[idx] = quantity/digit + 48;
-        quantity = quantity%digit;
-        digit = digit/10;
+        word[idx] = quantity / digit + 48;
+        quantity = quantity % digit;
+        digit = digit / 10;
         word[idx + 1] = '\0';
         idx++;
-        
-
     }
     string name = word;
     return name;
@@ -112,13 +109,13 @@ void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
 void savemedicinesdatainfile();
 void readmedicinedata();
-string getdata(string,int);
+string getdata(string, int);
 
 // main
 main()
 {
     system("cls");
-    
+
     bool program_running = true;
     while (program_running)
     {
@@ -161,24 +158,20 @@ main()
 
                                             string name;
                                             string quantity;
-                                            gotoxy(26,6);
+                                            gotoxy(26, 6);
                                             cin.ignore();
-                                            getline(cin,name);
-                                            gotoxy(21,7);
+                                            getline(cin, name);
+                                            gotoxy(21, 7);
                                             cin >> quantity;
-                                            if(Take_Order(name, quantity)){
+                                            if (Take_Order(name, quantity))
+                                            {
                                                 break;
                                             }
-                                            else {
-                                                
-                                                
+                                            else
+                                            {
+
                                                 char take_order_again = get_option();
-                                                
-
                                             }
-                                            
-
-
                                         }
                                     }
                                     else if (get_admin_menu_option == '2')
@@ -199,50 +192,47 @@ main()
                                         while (true)
                                         {
                                             admin_option_RemoveMedicine();
-                                          
+
                                             gotoxy(19, 8);
                                             string name;
-                                        
+
                                             getline(cin, name);
                                             remove_medicine(name);
                                             savemedicinesdatainfile();
                                             break;
                                         }
                                     }
-                                    
+
                                     else if (get_admin_menu_option == '4')
                                     {
                                         bool medicine_update_option_running = true;
                                         while (medicine_update_option_running)
                                         {
+                                            admin_option_Show_inventory();
                                             update_medicine_price_option();
                                             string medicine_name_to_update;
                                             cin >> medicine_name_to_update;
                                             if (isMedicinePresent(medicine_name_to_update))
                                             {
                                                 int index = medicine_index(medicine_name_to_update);
-                                                cout<<"Price of medicine is "<<medicines_prices[index]<<endl;
+                                                cout << "Price of medicine is " << medicines_prices[index] << endl;
                                                 string price;
-                                                cout<<"Enter new price: ";
+                                                cout << "Enter new price: ";
                                                 cin >> price;
                                                 medicines_prices[index] = price;
                                                 savemedicinesdatainfile();
                                                 break;
-
                                             }
-                                            else{
-                                                cout<<"Medicine not present"<<endl;
-                                                cout<<"Enter 0 to exit or anykey to try again";
+                                            else
+                                            {
+                                                cout << "Medicine not present" << endl;
+                                                cout << "Enter 0 to exit or anykey to try again";
                                                 char option = get_option();
                                                 if (option == '0')
                                                 {
                                                     break;
                                                 }
-
                                             }
-
-                                            
-                                            
                                         }
                                     }
                                     else if (get_admin_menu_option == '7')
@@ -316,45 +306,37 @@ string getdata(string sentence, int count)
 void readmedicinedata()
 {
     fstream file;
-    file.open("medicines.txt",ios::in);
-    string sentence;
-   
-    
-    
+    file.open("medicines.txt", ios::in);
     while (!file.eof())
     {
         string sentence;
-
         getline(file, sentence);
-        medicines_names[medicine_number] = getdata(sentence,1);
-        medicines_mass[medicine_number] = getdata(sentence,2);
-        medicines_prices[medicine_number] = getdata(sentence,3);
-        medicines_quantities[medicine_number] = getdata(sentence,4);
-        cout<< medicines_names[medicine_number];
-        cout << medicines_quantities[medicine_number];
+        if(file.eof())
+        {
+            break;
+        }
+        medicines_names[medicine_number] = getdata(sentence, 1);
+        medicines_mass[medicine_number] = getdata(sentence, 2);
+        medicines_prices[medicine_number] = getdata(sentence, 3);
+        medicines_quantities[medicine_number] = getdata(sentence, 4);
         medicine_number++;
-            
     }
     file.close();
-    
-
 }
 // save medicines data in file
 void savemedicinesdatainfile()
 {
     fstream file;
-    file.open("medicines.txt",ios::out);
-    for (int idx =0 ; idx < medicine_number;idx++)
+    file.open("medicines.txt", ios::out);
+    for (int idx = 0; idx < medicine_number; idx++)
     {
-        file << medicines_names[idx] << "," << medicines_mass[idx] <<"," << medicines_prices[idx] << "," << medicines_quantities[idx] << endl;
-
+        file << medicines_names[idx] << "," << medicines_mass[idx] << "," << medicines_prices[idx] << "," << medicines_quantities[idx] << endl;
     }
     file.close();
 }
 // to change medicine price
 void changemedicineprice(string name)
 {
-
 }
 // to check if option is correct.
 bool validate_option(int option_numbers, char option)
@@ -475,11 +457,10 @@ void Take_order_menu()
 // TO update medicine price
 void update_medicine_price_option()
 {
-    system("cls");
-    admin_option_Show_inventory();
+
     cout << "*     Enter Medicine name:                          *" << endl;
     cout << "*                                                   *" << endl;
-    }
+}
 
 // To take order of medicine from user
 bool Take_Order(string name, string quantity)
@@ -498,15 +479,14 @@ bool Take_Order(string name, string quantity)
         else if (intquantity < intremainingmedicines)
         {
             intremainingmedicines = intremainingmedicines - intquantity;
-        // 
-            medicines_quantities[medicine_index(name)] = integer_to_string(intremainingmedicines); 
+            //
+            medicines_quantities[medicine_index(name)] = integer_to_string(intremainingmedicines);
             return true;
         }
         else if (intquantity == intremainingmedicines)
         {
             remove_medicine(name);
             return true;
-
         }
     }
     else
@@ -630,4 +610,3 @@ bool isMedicinePresent(string name)
     }
     return present;
 }
-
