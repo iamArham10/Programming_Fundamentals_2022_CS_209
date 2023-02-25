@@ -30,7 +30,7 @@ string integer_to_string(int quantity)
 {
     string word = to_string(quantity);
     return word;
-    }
+}
 // TO convert String to integer;
 int string_to_integer(string quantity)
 {
@@ -38,7 +38,7 @@ int string_to_integer(string quantity)
     int integer = stoi(quantity);
     return integer;
 }
-// gotoxy function;
+// gotoxy function
 void gotoxy(int x, int y)
 {
     COORD coordinates;
@@ -58,9 +58,9 @@ int medicine_index(string name)
     }
     return 0;
 }
-void remove_medicine(string name);
+bool remove_medicine(string name);
 bool isMedicinePresent(string);
-int get_option();
+char get_option();
 void header();
 void main_menu();
 void admin_header();
@@ -68,24 +68,25 @@ void admin_login_menu();
 bool admin_login();
 void get_admin_credentials();
 void get_admin_login();
+void wrong_option();
 void admin_options_menu();
 void Take_order_menu();
 bool Take_Order(string, string);
 void update_medicine_price_option();
 bool add_medicine_data();
-void changemedicineprice(string);
+void changemedicineprice(char);
 void admin_option_AddMedicine();
 void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
 void savemedicinesdatainfile();
 void readmedicinedata();
-string getdata(string,int);
+string getdata(string, int);
 
 // main
 main()
 {
     system("cls");
-    
+
     bool program_running = true;
     while (program_running)
     {
@@ -103,8 +104,10 @@ main()
                 bool admin_running = true;
                 while (admin_running)
                 {
+
                     admin_login_menu();
                     char get_admin_option = get_option();
+
                     if (get_admin_option == '1')
                     {
 
@@ -113,6 +116,7 @@ main()
                         if (admin_login())
                         {
                             bool admin_option_running = true;
+
                             while (admin_header)
                             {
                                 admin_options_menu();
@@ -123,29 +127,25 @@ main()
                                     {
                                         bool Taking_order = true;
                                         while (Taking_order)
-                                        {
+                                        {   
+                                            admin_option_Show_inventory();
                                             Take_order_menu();
 
                                             string name;
                                             string quantity;
-                                            gotoxy(26,6);
                                             cin.ignore();
-                                            getline(cin,name);
-                                            gotoxy(21,7);
+                                            getline(cin, name);
                                             cin >> quantity;
-                                            if(Take_Order(name, quantity)){
+                                            if (Take_Order(name, quantity))
+                                            {
                                                 break;
                                             }
-                                            else {
-                                                
-                                                
-                                                char take_order_again = get_option();
-                                                
+                                            else
+                                            {
 
+                                                char take_order_again = get_option()
+                                                ;
                                             }
-                                            
-
-
                                         }
                                     }
                                     else if (get_admin_menu_option == '2')
@@ -157,6 +157,15 @@ main()
                                             if (add_medicine_data())
                                             {
                                                 savemedicinesdatainfile();
+                                                system("cls");
+                                                cout << "Medicine is added Successfully";
+                                                add_medicine_admin_option = false;
+                                            }
+                                            else
+                                            {
+                                                system("cls");
+                                                cout << "Medicine is already present";
+                                                Sleep(1000);
                                                 add_medicine_admin_option = false;
                                             }
                                         }
@@ -165,53 +174,55 @@ main()
                                     {
                                         while (true)
                                         {
+                                            system("cls");
+                                            admin_header();
+                                            admin_option_Show_inventory();
                                             admin_option_RemoveMedicine();
-                                          
-                                            gotoxy(19, 8);
                                             string name;
-                                        
                                             getline(cin, name);
-                                            remove_medicine(name);
-                                            savemedicinesdatainfile();
+                                            if (remove_medicine(name))
+                                            {
+                                                savemedicinesdatainfile();
+                                                system("cls");
+                                                cout << "Medicine is Removed";
+                                                Sleep(1000);
+                                            }
+                                            else
+                                            {
+                                                system("cls");
+                                                cout << "Medicine you entered is not present in inventory";
+                                                Sleep(1000);
+                                            }
+
                                             break;
                                         }
                                     }
-                                    
+
                                     else if (get_admin_menu_option == '4')
                                     {
                                         bool medicine_update_option_running = true;
                                         while (medicine_update_option_running)
-                                        {   
+                                        {
                                             system("cls");
                                             admin_option_Show_inventory();
                                             update_medicine_price_option();
-                                            string medicine_name_to_update;
-                                            cin >> medicine_name_to_update;
-                                            if (isMedicinePresent(medicine_name_to_update))
+                                            char selectmedicinenumber = get_option();
+
+                                            if (validate_option(medicine_number + 1, selectmedicinenumber))
                                             {
-                                                int index = medicine_index(medicine_name_to_update);
-                                                cout<<"Price of medicine is "<<medicines_prices[index]<<endl;
-                                                string price;
-                                                cout<<"Enter new price: ";
-                                                cin >> price;
-                                                medicines_prices[index] = price;
+                                                changemedicineprice(selectmedicinenumber);
                                                 savemedicinesdatainfile();
                                                 break;
-
                                             }
-                                            else{
-                                                cout<<"Medicine not present"<<endl;
-                                                cout<<"Enter 0 to exit or anykey to try again";
+                                            else
+                                            {
+                                                wrong_option();
                                                 char option = get_option();
                                                 if (option == '0')
                                                 {
                                                     break;
                                                 }
-
                                             }
-
-                                            
-                                            
                                         }
                                     }
                                     else if (get_admin_menu_option == '7')
@@ -285,50 +296,51 @@ string getdata(string sentence, int count)
 void readmedicinedata()
 {
     fstream file;
-    file.open("medicines.txt",ios::in);
+    file.open("medicines.txt", ios::in);
     string sentence;
-   
-    
-    
+
     while (!file.eof())
     {
         string sentence;
 
         getline(file, sentence);
-        if (getdata(sentence,1) == "")
+        if (getdata(sentence, 1) == "")
         {
             break;
         }
-        medicines_names[medicine_number] = getdata(sentence,1);
-        
-        medicines_mass[medicine_number] = getdata(sentence,2);
-        medicines_prices[medicine_number] = getdata(sentence,3);
-        medicines_quantities[medicine_number] = getdata(sentence,4);
-        cout<< medicines_names[medicine_number];
+        medicines_names[medicine_number] = getdata(sentence, 1);
+
+        medicines_mass[medicine_number] = getdata(sentence, 2);
+        medicines_prices[medicine_number] = getdata(sentence, 3);
+        medicines_quantities[medicine_number] = getdata(sentence, 4);
+        cout << medicines_names[medicine_number];
         cout << medicines_quantities[medicine_number];
         medicine_number++;
-            
     }
     file.close();
-    
-
 }
 // save medicines data in file
 void savemedicinesdatainfile()
 {
     fstream file;
-    file.open("medicines.txt",ios::out);
-    for (int idx =0 ; idx < medicine_number;idx++)
+    file.open("medicines.txt", ios::out);
+    for (int idx = 0; idx < medicine_number; idx++)
     {
-        file << medicines_names[idx] << "," << medicines_mass[idx] <<"," << medicines_prices[idx] << "," << medicines_quantities[idx] << endl;
-
+        file << medicines_names[idx] << "," << medicines_mass[idx] << "," << medicines_prices[idx] << "," << medicines_quantities[idx] << endl;
     }
     file.close();
 }
 // to change medicine price
-void changemedicineprice(string name)
+void changemedicineprice(char selectmedicinenumber)
 {
-
+    int selectednumber = selectmedicinenumber;
+    selectednumber = selectednumber - 48;
+    cout << endl
+         << "Price of medicine is " << medicines_prices[selectednumber - 1] << endl;
+    string price;
+    cout << "Enter new price: ";
+    cin >> price;
+    medicines_prices[selectednumber - 1] = price;
 }
 // to check if option is correct.
 bool validate_option(int option_numbers, char option)
@@ -343,9 +355,15 @@ bool validate_option(int option_numbers, char option)
     }
     return false;
 }
+// displays if user presses wrong option
+void wrong_option()
+{
+    cout << endl << "Selected Wrong option" << endl;
+    cout << "Enter 0 to exit or anykey to try again";
+}
 
 // TO Get Option from user
-int get_option()
+char get_option()
 {
     char Option = getch();
     // cout << "Enter option: ";
@@ -438,22 +456,17 @@ void admin_options_menu()
 // TO Show Take order menu
 void Take_order_menu()
 {
-    system("cls");
-    admin_header();
-    cout << "*                                                   *" << endl;
-    cout << "*     Enter Medicine name:                          *" << endl;
-    cout << "*     Enter Quantity:                               *" << endl;
-    cout << "*                                                   *" << endl;
+    cout<<"Enter Medicine name: ";
+    cout<<"Enter Quantity: "; 
 }
 
 // TO update medicine price
 void update_medicine_price_option()
 {
-    
-    
-    cout << "*     Enter Medicine name:                          *" << endl;
+
     cout << "*                                                   *" << endl;
-    }
+    cout << " Enter medicine number:";
+}
 
 // To take order of medicine from user
 bool Take_Order(string name, string quantity)
@@ -472,15 +485,14 @@ bool Take_Order(string name, string quantity)
         else if (intquantity < intremainingmedicines)
         {
             intremainingmedicines = intremainingmedicines - intquantity;
-        // 
-            medicines_quantities[medicine_index(name)] = integer_to_string(intremainingmedicines); 
+            //
+            medicines_quantities[medicine_index(name)] = integer_to_string(intremainingmedicines);
             return true;
         }
         else if (intquantity == intremainingmedicines)
         {
             remove_medicine(name);
             return true;
-
         }
     }
     else
@@ -550,20 +562,16 @@ void admin_option_Show_inventory()
 // To show admin options to user
 void admin_option_RemoveMedicine()
 {
-    system("cls");
-    admin_header();
 
     cout << "*                                                   *" << endl;
-    cout << "*   <remove medicine>                               *" << endl;
+    cout << "*   <Enter Medicine name to remove>                 *" << endl;
     cout << "*                                                   *" << endl;
-    cout << "*    Medicine name:                                 *" << endl;
-    cout << "*                                                   *" << endl;
-    cout << "*****************************************************" << endl;
+    cout << "    Medicine name:";
 }
 // TO remove medicines from medicines list.
-void remove_medicine(string name)
+bool remove_medicine(string name)
 {
-
+    bool medicine_removed = false;
     if (isMedicinePresent(name))
     {
         for (int idx = 0; idx < medicine_number; idx++)
@@ -585,10 +593,12 @@ void remove_medicine(string name)
                     medicines_prices[itx] = medicines_prices[itx + 1];
                     medicines_quantities[itx] = medicines_quantities[itx + 1];
                 }
+                medicine_removed = true;
                 break;
             }
         }
     }
+    return medicine_removed;
 }
 // check if medicine is already present
 bool isMedicinePresent(string name)
@@ -604,4 +614,3 @@ bool isMedicinePresent(string name)
     }
     return present;
 }
-

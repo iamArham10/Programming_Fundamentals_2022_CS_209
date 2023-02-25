@@ -1,1 +1,1 @@
-Parcetamol,200,250,150
+Panadol,200,150,200
