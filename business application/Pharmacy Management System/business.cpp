@@ -70,7 +70,7 @@ void get_admin_credentials();
 void get_admin_login();
 void wrong_option();
 void admin_options_menu();
-void Take_order_menu();
+
 bool Take_Order(string, string);
 void update_medicine_price_option();
 bool add_medicine_data();
@@ -127,24 +127,39 @@ main()
                                     {
                                         bool Taking_order = true;
                                         while (Taking_order)
-                                        {   
+                                        {
                                             admin_option_Show_inventory();
-                                            Take_order_menu();
 
                                             string name;
                                             string quantity;
+                                            cout << "Enter Medicine name:";
                                             cin.ignore();
                                             getline(cin, name);
-                                            cin >> quantity;
-                                            if (Take_Order(name, quantity))
-                                            {
-                                                break;
-                                            }
-                                            else
-                                            {
 
-                                                char take_order_again = get_option()
-                                                ;
+                                            if (isMedicinePresent(name))
+                                            {
+                                                cin >> quantity;
+                                                if (Take_Order(name, quantity))
+                                                {
+                                                    savemedicinesdatainfile();
+                                                    Taking_order = false;
+                                                }
+                                                else
+                                                {
+
+                                                    cout << endl << "press 0 to exit or any other key to try again";
+                                                    char take_order_again = get_option();
+                                                    if (take_order_again == '0')
+                                                    {
+                                                        
+                                                        Taking_order = false;
+                                                    }
+                                                }
+                                            }
+                                            else {
+                                                system("cls");
+                                                cout<<"Medicine not Available";
+                                                Sleep(1000);
                                             }
                                         }
                                     }
@@ -358,7 +373,8 @@ bool validate_option(int option_numbers, char option)
 // displays if user presses wrong option
 void wrong_option()
 {
-    cout << endl << "Selected Wrong option" << endl;
+    cout << endl
+         << "Selected Wrong option" << endl;
     cout << "Enter 0 to exit or anykey to try again";
 }
 
@@ -453,13 +469,6 @@ void admin_options_menu()
     cout << "*****************************************************" << endl;
 }
 
-// TO Show Take order menu
-void Take_order_menu()
-{
-    cout<<"Enter Medicine name: ";
-    cout<<"Enter Quantity: "; 
-}
-
 // TO update medicine price
 void update_medicine_price_option()
 {
@@ -479,7 +488,7 @@ bool Take_Order(string name, string quantity)
 
         if (intquantity > intremainingmedicines)
         {
-            cout << "Required medicine only has " << intremainingmedicines << "quantities available Press any key to try again";
+            cout << "Required medicine only has " << intremainingmedicines << " quantities available" << endl;
             return false;
         }
         else if (intquantity < intremainingmedicines)
@@ -497,7 +506,8 @@ bool Take_Order(string name, string quantity)
     }
     else
     {
-        cout << "Medicine not present Press any key to try again";
+        cout << endl
+             << "Medicine is not available" << endl;
         return false;
     }
 }
