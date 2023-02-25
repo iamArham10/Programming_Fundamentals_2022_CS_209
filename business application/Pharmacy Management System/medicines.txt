@@ -1,2 +1,1 @@
-Panadol,100,999,100
 Parcetamol,200,250,150
