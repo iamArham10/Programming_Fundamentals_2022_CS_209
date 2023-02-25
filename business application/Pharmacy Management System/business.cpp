@@ -28,48 +28,15 @@ bool validate_option(int, char);
 // convert string to integer
 string integer_to_string(int quantity)
 {
-    char word[10];
-    int idx = 0;
-    int n = quantity;
-    int digit = 1;
-
-    while (n > 0)
-    {   
-        
-        if (n > 0 && n < 10)
-        {
-            break;
-        }
-        n = n/10;
-        digit = digit * 10;
-
+    string word = to_string(quantity);
+    return word;
     }
-
-    while (quantity > 0)
-    {
-        word[idx] = quantity/digit + 48;
-        quantity = quantity%digit;
-        digit = digit/10;
-        word[idx + 1] = '\0';
-        idx++;
-        
-
-    }
-    string name = word;
-    return name;
-}
 // TO convert String to integer;
 int string_to_integer(string quantity)
 {
 
-    int sum = 0;
-    for (int idx = 0; quantity[idx] != '\0'; idx++)
-    {
-        int a = quantity[idx];
-        sum = sum * 10 + (a - 48);
-        ;
-    }
-    return sum;
+    int integer = stoi(quantity);
+    return integer;
 }
 // gotoxy function;
 void gotoxy(int x, int y)
@@ -328,7 +295,12 @@ void readmedicinedata()
         string sentence;
 
         getline(file, sentence);
+        if (getdata(sentence,1) == "")
+        {
+            break;
+        }
         medicines_names[medicine_number] = getdata(sentence,1);
+        
         medicines_mass[medicine_number] = getdata(sentence,2);
         medicines_prices[medicine_number] = getdata(sentence,3);
         medicines_quantities[medicine_number] = getdata(sentence,4);
