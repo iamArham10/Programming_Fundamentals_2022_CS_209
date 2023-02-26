@@ -64,6 +64,7 @@ char get_option();
 void header();
 void main_menu();
 void admin_header();
+bool exit_option(char);
 void admin_login_menu();
 bool admin_login();
 void get_admin_credentials();
@@ -133,8 +134,7 @@ main()
                                             string name;
                                             string quantity;
                                             cout << "Enter Medicine name:";
-                                            cin.ignore();
-                                            getline(cin, name);
+                                            cin >> name;
 
                                             if (isMedicinePresent(name))
                                             {
@@ -148,20 +148,19 @@ main()
                                                 else
                                                 {
 
-                                                    cout << endl
-                                                         << "press 0 to exit or any other key to try again";
+                                                    cout << endl << "press 0 to exit or any other key to try again";
                                                     char take_order_again = get_option();
-                                                    if (take_order_again == '0')
-                                                    {
-                                                        Taking_order = false;
-                                                    }
+                                                    Taking_order = exit_option(take_order_again);
+                                                
                                                 }
                                             }
-                                            else if (!isMedicinePresent(name))
+                                            else 
                                             {
                                                 system("cls");
-                                                cout << "Medicine not Available";
-                                                Sleep(1000);
+                                                cout << "Medicine not Available" << endl;
+                                                cout << "Press 0 to exit or any key to try again: ";
+                                                char getoption = get_option();
+                                                Taking_order = exit_option(getoption);
                                             }
                                         }
                                     }
@@ -308,6 +307,18 @@ string getdata(string sentence, int count)
         }
     }
     return word;
+}
+// exits if user has pressed 0 else tries again;
+bool exit_option(char c)
+{
+    bool Exit = true;
+    if (c == '0')
+    {
+        Exit = false;
+    }
+
+    return Exit;
+    
 }
 // to read medicine data from medicine file
 void readmedicinedata()
