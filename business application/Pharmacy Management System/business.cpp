@@ -90,8 +90,11 @@ void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
 void savemedicinesdatainfile();
 void readmedicinedata();
+void read_sold_record_from_file();
+void save_sold_record_in_file();
 void save_sold_record(string name, string quantity);
 string getdata(string, int);
+
 
 // main
 main()
@@ -101,7 +104,10 @@ main()
     bool program_running = true;
     while (program_running)
     {
+        // Reads Medicine data from a file
         readmedicinedata();
+        // Reads Sales record from file
+        read_sold_record_from_file();
         system("cls");
         main_menu();
         // To take main Menu Options from user
@@ -154,6 +160,7 @@ main()
                                                 {
                                                     save_sold_record(name,quantity);
                                                     savemedicinesdatainfile();
+                                                    save_sold_record_in_file();
                                                     Taking_order = false;
                                                 }
                                                 else
@@ -357,8 +364,6 @@ void readmedicinedata()
         medicines_mass[medicine_number] = getdata(sentence, 2);
         medicines_prices[medicine_number] = getdata(sentence, 3);
         medicines_quantities[medicine_number] = getdata(sentence, 4);
-        cout << medicines_names[medicine_number];
-        cout << medicines_quantities[medicine_number];
         medicine_number++;
     }
     file.close();
@@ -406,7 +411,6 @@ void wrong_option()
          << "Selected Wrong option" << endl;
     cout << "Enter 0 to exit or anykey to try again";
 }
-
 // TO Get Option from user
 char get_option()
 {
@@ -497,7 +501,6 @@ void admin_options_menu()
     cout << "*                                                   *" << endl;
     cout << "*****************************************************" << endl;
 }
-
 // TO update medicine price
 void update_medicine_price_option()
 {
@@ -505,7 +508,6 @@ void update_medicine_price_option()
     cout << "*                                                   *" << endl;
     cout << " Enter medicine number:";
 }
-
 // To take order of medicine from user
 bool Take_Order(string name, string quantity)
 {
@@ -541,7 +543,6 @@ bool Take_Order(string name, string quantity)
         return false;
     }
 }
-
 // TO Show Admin Option add medicine
 void admin_option_AddMedicine()
 {
@@ -665,12 +666,10 @@ for (int idx = 0; idx < no_of_sold_medicines; idx++)
   cout << "Quantities sold: ";  
   cout << sold_medicine_quantities[idx] << endl;
   cout << "Payment Received: ";
-  cout << amount_received[idx] << endl;
+  cout << amount_received[idx] << endl << endl;
+  cout << "-------------------------------------" << endl;
+
 }
-
-
-
-
 }
 // to store sales in an array
 void save_sold_record(string name, string quantity)
@@ -682,4 +681,34 @@ void save_sold_record(string name, string quantity)
     int price = string_to_integer(strprice);
     amount_received[no_of_sold_medicines] = integer_to_string(price*quantities);
     no_of_sold_medicines++;
+}
+// to Store sales in a file
+void save_sold_record_in_file()
+{
+    fstream file;
+    file.open("sales.txt",ios::out);
+    for (int idx = 0; idx < no_of_sold_medicines; idx++)
+    {
+        file<<sold_medicines_names[idx] << "," <<sold_medicine_quantities[idx] << "," <<amount_received[idx] << endl;
+    }
+    file.close();
+}
+// To read sales record from file
+void read_sold_record_from_file()
+{
+    fstream file;
+    file.open("sales.txt",ios::in);
+    while(!file.eof())
+    {
+        string sentence;
+        getline(file, sentence);
+        if (getdata(sentence , 1) == "")
+        {
+            break;
+        }
+        sold_medicines_names[no_of_sold_medicines] = getdata(sentence,1);
+        sold_medicine_quantities[no_of_sold_medicines] = getdata(sentence, 2);
+        amount_received[no_of_sold_medicines] = getdata(sentence,3);
+        no_of_sold_medicines++;
+    }   
 }

@@ -1,2 +1,2 @@
-Parcetamol,50,599,9918
-Ephedrine,100,899a,500
+Parcetamol,50,599,9194
+Ephedrine,100,899a,200

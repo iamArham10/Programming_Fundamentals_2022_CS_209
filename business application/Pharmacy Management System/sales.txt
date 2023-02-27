@@ -1,0 +1,2 @@
+Parcetamol,10,5990
+Parcetamol,5,2995
