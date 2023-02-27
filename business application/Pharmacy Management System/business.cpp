@@ -15,6 +15,15 @@ string employee_passwords[20];
 string employee_code[20];
 // medicine numbers
 int medicine_number = 0;
+// sold medicines number
+int no_of_sold_medicines = 0;
+// sold medicines record;
+string sold_medicines_names[1000];
+// sold medicines quantity;
+string sold_medicine_quantities[1000];
+// amount received;
+string amount_received[1000];
+
 // medicine names
 string medicines_names[1000];
 // medicine weights
@@ -70,8 +79,8 @@ bool admin_login();
 void get_admin_credentials();
 void get_admin_login();
 void wrong_option();
+void show_sales();
 void admin_options_menu();
-
 bool Take_Order(string, string);
 void update_medicine_price_option();
 bool add_medicine_data();
@@ -81,6 +90,7 @@ void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
 void savemedicinesdatainfile();
 void readmedicinedata();
+void save_sold_record(string name, string quantity);
 string getdata(string, int);
 
 // main
@@ -142,6 +152,7 @@ main()
                                                 cin >> quantity;
                                                 if (Take_Order(name, quantity))
                                                 {
+                                                    save_sold_record(name,quantity);
                                                     savemedicinesdatainfile();
                                                     Taking_order = false;
                                                 }
@@ -158,9 +169,8 @@ main()
                                             {
                                                 system("cls");
                                                 cout << "Medicine not Available" << endl;
-                                                cout << "Press 0 to exit or any key to try again: ";
-                                                char getoption = get_option();
-                                                Taking_order = exit_option(getoption);
+                                                cout << "Enter any key to try again or 0 to exit";                                                
+                                                Taking_order = exit_option(get_option());
                                             }
                                         }
                                     }
@@ -181,8 +191,9 @@ main()
                                             {
                                                 system("cls");
                                                 cout << "Medicine is already present";
+                                                
                                                 Sleep(1000);
-                                                add_medicine_admin_option = false;
+                                                add_medicine_admin_option = exit_option(get_option());
                                             }
                                         }
                                     }
@@ -240,6 +251,11 @@ main()
                                                 }
                                             }
                                         }
+                                    }
+                                    else if (get_admin_menu_option == '5')
+                                    {
+                                        show_sales();
+                                        getch();
                                     }
                                     else if (get_admin_menu_option == '7')
                                     {
@@ -473,8 +489,8 @@ void admin_options_menu()
     cout << "*     1. Take Order.                                *" << endl;
     cout << "*     2. Add Medicines.                             *" << endl;
     cout << "*     3. Remove Medicines.                          *" << endl;
-    cout << "*     4. Update Medicines price.                    *" << endl;
-    cout << "*     5. Show Customer Records.                     *" << endl;
+    cout << "*     4. Update Medicines Price.                    *" << endl;
+    cout << "*     5. Show Sales Record.                         *" << endl;
     cout << "*     6. Employee                                   *" << endl;
     cout << "*     7. Show inventory.                            *" << endl;
     cout << "*     0. Back                                       *" << endl;
@@ -570,8 +586,8 @@ void admin_option_Show_inventory()
 {
     system("cls");
     admin_header();
-    cout << "*  Medicine name(weight)                             *" << endl;
-    cout << "------------------------------------------------------" << endl;
+    cout << "*  Medicine name(weight)                            *" << endl;
+    cout << "-----------------------------------------------------" << endl;
     for (int idx = 0; idx < medicine_number; idx++)
     {
         cout << "   Medicine no: " << idx + 1 << endl;
@@ -637,4 +653,33 @@ bool isMedicinePresent(string name)
         }
     }
     return present;
+}
+// used to show sales record
+void show_sales()
+{
+for (int idx = 0; idx < no_of_sold_medicines; idx++)
+{
+  cout << "Order no : "<< idx + 1 << endl;
+  cout << "Medicine name: ";
+  cout << sold_medicines_names[idx] << endl;
+  cout << "Quantities sold: ";  
+  cout << sold_medicine_quantities[idx] << endl;
+  cout << "Payment Received: ";
+  cout << amount_received[idx] << endl;
+}
+
+
+
+
+}
+// to store sales in an array
+void save_sold_record(string name, string quantity)
+{
+    sold_medicines_names[no_of_sold_medicines] =  name;
+    sold_medicine_quantities[no_of_sold_medicines] = quantity;
+    int quantities = string_to_integer(quantity);
+    string strprice = medicines_prices[medicine_index(name)];
+    int price = string_to_integer(strprice);
+    amount_received[no_of_sold_medicines] = integer_to_string(price*quantities);
+    no_of_sold_medicines++;
 }
