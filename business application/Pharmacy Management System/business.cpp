@@ -277,9 +277,23 @@ main()
                                     }
                                     else if (get_admin_menu_option == '6')
                                     {
-                                        system("cls");
-                                        Admin_option_Employee();
-                                        getch();
+                                        
+                                        bool admin_option_employee_running = true;
+                                        while (admin_option_employee_running)
+                                        {
+                                            system("cls");
+                                            Admin_option_Employee();
+                                            char get_admin_option_employee = getch();
+                                            if (get_admin_option_employee == '0')
+                                            {
+                                                admin_option_employee_running = false;
+                                            }
+                                            else if (get_admin_option_employee == '1')
+                                            {
+                                                 
+                                            }
+
+                                        }
                                     }
                                     else if (get_admin_menu_option == '7')
                                     {
@@ -574,7 +588,8 @@ bool Take_Order(string name, string quantity)
     }
     else
     {
-        cout << endl<< "Medicine is not available" << endl;
+        cout << endl
+             << "Medicine is not available" << endl;
         return false;
     }
 }
@@ -748,7 +763,7 @@ void read_sold_record_from_file()
     }
 }
 
-void Admin_option_Employee() 
+void Admin_option_Employee()
 {
     admin_header();
     cout << "*                                                   *" << endl;
