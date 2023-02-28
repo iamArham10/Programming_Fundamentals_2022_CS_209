@@ -93,9 +93,11 @@ void changemedicineprice(char);
 void admin_option_AddMedicine();
 void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
+bool Add_Employee(string username, string password, string code);
 void savemedicinesdatainfile();
 void readmedicinedata();
 void Admin_option_Employee();
+bool isEmployeePresent(string);
 bool validate_employee_code();
 void read_sold_record_from_file();
 void save_sold_record_in_file();
@@ -277,7 +279,7 @@ main()
                                     }
                                     else if (get_admin_menu_option == '6')
                                     {
-                                        
+
                                         bool admin_option_employee_running = true;
                                         while (admin_option_employee_running)
                                         {
@@ -290,9 +292,9 @@ main()
                                             }
                                             else if (get_admin_option_employee == '1')
                                             {
-                                                 
+                                                bool Add_Employee_Option_Running = Add_Employee_Option();
+                                                admin_option_employee_running = false;
                                             }
-
                                         }
                                     }
                                     else if (get_admin_menu_option == '7')
@@ -762,8 +764,9 @@ void read_sold_record_from_file()
         no_of_sold_medicines++;
     }
 }
-
+// To show admin option Employee Management
 void Admin_option_Employee()
+
 {
     admin_header();
     cout << "*                                                   *" << endl;
@@ -776,3 +779,106 @@ void Admin_option_Employee()
     cout << "*                                                   *" << endl;
     cout << "*****************************************************" << endl;
 }
+// to add Employee in an Employee array
+bool Add_Employee(string username, string password, string code)
+{
+    bool is_employee_added;
+    if (isEmployeePresent(username))
+    {
+        cout << "Name is already Present";
+        is_employee_added = false;
+    }
+    else if (!IsCodeValid(code))
+    {
+        cout << "Invalid Code";
+        is_employee_added = false;
+    }
+    else
+    {
+        employee_names[noofemployee] = username;
+        employee_passwords[noofemployee] = password;
+        employee_code[noofemployee] = code;
+        noofemployee++;
+        is_employee_added = true;
+    }
+    Sleep(1000);
+    return is_employee_added;
+}
+bool isEmployeePresent(string username)
+{
+    bool EmployeeisPresent = false;
+    for (int idx = 0; idx < noofemployee; idx++)
+    {
+        if (employee_names[idx] == username)
+        {
+            EmployeeisPresent = true;
+            break;
+        }
+    }
+    return EmployeeisPresent;
+}
+bool Add_Employee_Option()
+{
+    bool Add_Employee_Option_Running = true;
+    while (Add_Employee_Option_Running)
+    {
+        cout << "Enter Employee User name: ";
+        string username;
+        cin >> username;
+        string userpassword;
+        cin >> userpassword;
+        string code;
+        cin >> code;
+        if (Add_Employee(username, admin_password, code))
+        {
+            cout << "Employee Added Successfully";
+            Sleep(1000);
+        }
+        else
+        {
+            Add_Employee_Option_Running = false;
+        }
+    }
+    return Add_Employee_Option_Running;
+}
+// To check if employees code is valid
+bool IsCodeValid(string code)
+{
+    bool IsValid;
+    
+    if(validate_numbers(code))
+    {
+        
+        
+    }
+    else 
+    {
+        IsValid = false;
+    }
+}
+// Returnrs false if a digit is number in a number;
+bool IsDigitRepeating(string code)
+{
+    bool IsRepeating = false;
+    int firstdigit;
+    int seconddigit;
+    for (int idx = 0; code[idx] != '\0' ;idx++)
+    {
+        firstdigit = code[idx];
+        for (int itx = idx + 1; code[itx] != '\0';itx++)
+        {
+            if (idx == itx)
+            {
+                continue;
+            }
+            seconddigit = code[itx];
+            if (seconddigit == firstdigit)
+            {
+                IsRepeating = true;
+                return IsRepeating;
+            }
+        }
+    }
+    return IsRepeating;
+}
+
