@@ -13,10 +13,14 @@ string get_admin_password;
 string employee_names[20];
 string employee_passwords[20];
 string employee_code[20];
+// current employee numbers;
+int noofemployee = 0;
 // medicine numbers
 int medicine_number = 0;
 // sold medicines number
 int no_of_sold_medicines = 0;
+
+//  Medicine Sales Records
 // sold medicines record;
 string sold_medicines_names[1000];
 // sold medicines quantity;
@@ -71,6 +75,7 @@ bool remove_medicine(string name);
 bool isMedicinePresent(string);
 char get_option();
 void header();
+bool validate_numbers(string);
 void main_menu();
 void admin_header();
 bool exit_option(char);
@@ -90,11 +95,12 @@ void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
 void savemedicinesdatainfile();
 void readmedicinedata();
+void Admin_option_Employee();
+bool validate_employee_code();
 void read_sold_record_from_file();
 void save_sold_record_in_file();
 void save_sold_record(string name, string quantity);
 string getdata(string, int);
-
 
 // main
 main()
@@ -149,16 +155,21 @@ main()
 
                                             string name;
                                             string quantity;
+
                                             cout << "Enter Medicine name:";
                                             cin >> name;
 
                                             if (isMedicinePresent(name))
                                             {
-                                                cout<<"Enter Quantity: ";
+                                                cout << "Enter Quantity: ";
                                                 cin >> quantity;
+                                                if (validate_numbers(quantity))
+                                                {
+                                                    getch();
+                                                }
                                                 if (Take_Order(name, quantity))
                                                 {
-                                                    save_sold_record(name,quantity);
+                                                    save_sold_record(name, quantity);
                                                     savemedicinesdatainfile();
                                                     save_sold_record_in_file();
                                                     Taking_order = false;
@@ -166,17 +177,17 @@ main()
                                                 else
                                                 {
 
-                                                    cout << endl << "press 0 to exit or any other key to try again";
+                                                    cout << endl
+                                                         << "press 0 to exit or any other key to try again";
                                                     char take_order_again = get_option();
                                                     Taking_order = exit_option(take_order_again);
-                                                
                                                 }
                                             }
-                                            else 
+                                            else
                                             {
                                                 system("cls");
                                                 cout << "Medicine not Available" << endl;
-                                                cout << "Enter any key to try again or 0 to exit";                                                
+                                                cout << "Enter any key to try again or 0 to exit";
                                                 Taking_order = exit_option(get_option());
                                             }
                                         }
@@ -198,7 +209,7 @@ main()
                                             {
                                                 system("cls");
                                                 cout << "Medicine is already present";
-                                                
+
                                                 Sleep(1000);
                                                 add_medicine_admin_option = exit_option(get_option());
                                             }
@@ -264,6 +275,12 @@ main()
                                         show_sales();
                                         getch();
                                     }
+                                    else if (get_admin_menu_option == '6')
+                                    {
+                                        system("cls");
+                                        Admin_option_Employee();
+                                        getch();
+                                    }
                                     else if (get_admin_menu_option == '7')
                                     {
                                         bool showing_inventory = true;
@@ -279,7 +296,6 @@ main()
                                             }
                                         }
                                     }
-
                                     else if (get_admin_menu_option == '0')
                                     {
                                         break;
@@ -341,7 +357,6 @@ bool exit_option(char c)
     }
 
     return Exit;
-    
 }
 // to read medicine data from medicine file
 void readmedicinedata()
@@ -403,6 +418,27 @@ bool validate_option(int option_numbers, char option)
         }
     }
     return false;
+}
+// To validate numbers
+bool validate_numbers(string sentence)
+{
+    char character;
+    bool valid;
+    for (int idx = 0; sentence[idx] != '\0'; idx++)
+    {
+        character = sentence[idx];
+        int b = character;
+
+        if (b >= 48 && b <= 57)
+        {
+            valid = true;
+        }
+        else
+        {
+            valid = false;
+        }
+    }
+    return valid;
 }
 // displays if user presses wrong option
 void wrong_option()
@@ -538,8 +574,7 @@ bool Take_Order(string name, string quantity)
     }
     else
     {
-        cout << endl
-             << "Medicine is not available" << endl;
+        cout << endl<< "Medicine is not available" << endl;
         return false;
     }
 }
@@ -658,38 +693,38 @@ bool isMedicinePresent(string name)
 // used to show sales record
 void show_sales()
 {
-for (int idx = 0; idx < no_of_sold_medicines; idx++)
-{
-  cout << "Order no : "<< idx + 1 << endl;
-  cout << "Medicine name: ";
-  cout << sold_medicines_names[idx] << endl;
-  cout << "Quantities sold: ";  
-  cout << sold_medicine_quantities[idx] << endl;
-  cout << "Payment Received: ";
-  cout << amount_received[idx] << endl << endl;
-  cout << "-------------------------------------" << endl;
-
-}
+    for (int idx = 0; idx < no_of_sold_medicines; idx++)
+    {
+        cout << "Order no : " << idx + 1 << endl;
+        cout << "Medicine name: ";
+        cout << sold_medicines_names[idx] << endl;
+        cout << "Quantities sold: ";
+        cout << sold_medicine_quantities[idx] << endl;
+        cout << "Payment Received: ";
+        cout << amount_received[idx] << endl
+             << endl;
+        cout << "-------------------------------------" << endl;
+    }
 }
 // to store sales in an array
 void save_sold_record(string name, string quantity)
 {
-    sold_medicines_names[no_of_sold_medicines] =  name;
+    sold_medicines_names[no_of_sold_medicines] = name;
     sold_medicine_quantities[no_of_sold_medicines] = quantity;
     int quantities = string_to_integer(quantity);
     string strprice = medicines_prices[medicine_index(name)];
     int price = string_to_integer(strprice);
-    amount_received[no_of_sold_medicines] = integer_to_string(price*quantities);
+    amount_received[no_of_sold_medicines] = integer_to_string(price * quantities);
     no_of_sold_medicines++;
 }
 // to Store sales in a file
 void save_sold_record_in_file()
 {
     fstream file;
-    file.open("sales.txt",ios::out);
+    file.open("sales.txt", ios::out);
     for (int idx = 0; idx < no_of_sold_medicines; idx++)
     {
-        file<<sold_medicines_names[idx] << "," <<sold_medicine_quantities[idx] << "," <<amount_received[idx] << endl;
+        file << sold_medicines_names[idx] << "," << sold_medicine_quantities[idx] << "," << amount_received[idx] << endl;
     }
     file.close();
 }
@@ -697,18 +732,32 @@ void save_sold_record_in_file()
 void read_sold_record_from_file()
 {
     fstream file;
-    file.open("sales.txt",ios::in);
-    while(!file.eof())
+    file.open("sales.txt", ios::in);
+    while (!file.eof())
     {
         string sentence;
         getline(file, sentence);
-        if (getdata(sentence , 1) == "")
+        if (getdata(sentence, 1) == "")
         {
             break;
         }
-        sold_medicines_names[no_of_sold_medicines] = getdata(sentence,1);
+        sold_medicines_names[no_of_sold_medicines] = getdata(sentence, 1);
         sold_medicine_quantities[no_of_sold_medicines] = getdata(sentence, 2);
-        amount_received[no_of_sold_medicines] = getdata(sentence,3);
+        amount_received[no_of_sold_medicines] = getdata(sentence, 3);
         no_of_sold_medicines++;
-    }   
+    }
+}
+
+void Admin_option_Employee() 
+{
+    admin_header();
+    cout << "*                                                   *" << endl;
+    cout << "* Employee Management                               *" << endl;
+    cout << "*      Press the following keys                     *" << endl;
+    cout << "*          1. Create Employee List                  *" << endl;
+    cout << "*          2. See Employee List                     *" << endl;
+    cout << "*          3. Change Employee Features              *" << endl;
+    cout << "*                                                   *" << endl;
+    cout << "*                                                   *" << endl;
+    cout << "*****************************************************" << endl;
 }

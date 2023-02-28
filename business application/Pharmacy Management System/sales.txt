@@ -1,2 +1,8 @@
 Parcetamol,10,5990
 Parcetamol,5,2995
+Parcetamol,500,299500
+Parcetamol,5t,2995
+Parcetamol,5a,2995
+Parcetamol,33,19767
+Ephedrine,56,50344
+Parcetamol,5s,2995
