@@ -73,6 +73,8 @@ int medicine_index(string name)
 }
 bool remove_medicine(string name);
 bool isMedicinePresent(string);
+bool IsDigitRepeating(string);
+bool IsCodeValid(string);
 char get_option();
 void header();
 bool validate_numbers(string);
@@ -93,7 +95,9 @@ void changemedicineprice(char);
 void admin_option_AddMedicine();
 void admin_option_Show_inventory();
 void admin_option_RemoveMedicine();
+bool Add_Employee_Option();
 bool Add_Employee(string username, string password, string code);
+void Show_Employee_List();
 void savemedicinesdatainfile();
 void readmedicinedata();
 void Admin_option_Employee();
@@ -294,6 +298,12 @@ main()
                                             {
                                                 bool Add_Employee_Option_Running = Add_Employee_Option();
                                                 admin_option_employee_running = false;
+                                            }
+                                            else if (get_admin_option_employee == '2')
+                                            {
+                                                system("cls");
+                                                Show_Employee_List();
+                                                getch();
                                             }
                                         }
                                     }
@@ -804,6 +814,7 @@ bool Add_Employee(string username, string password, string code)
     Sleep(1000);
     return is_employee_added;
 }
+// to check if new entered employee name is already registered
 bool isEmployeePresent(string username)
 {
     bool EmployeeisPresent = false;
@@ -817,6 +828,7 @@ bool isEmployeePresent(string username)
     }
     return EmployeeisPresent;
 }
+// add Employee function
 bool Add_Employee_Option()
 {
     bool Add_Employee_Option_Running = true;
@@ -825,17 +837,21 @@ bool Add_Employee_Option()
         cout << "Enter Employee User name: ";
         string username;
         cin >> username;
+        cout <<"Enter Employee Password: ";
         string userpassword;
         cin >> userpassword;
+        cout <<"Enter Employee features code: ";
         string code;
         cin >> code;
         if (Add_Employee(username, admin_password, code))
         {
             cout << "Employee Added Successfully";
+            Add_Employee_Option_Running = false;
             Sleep(1000);
         }
         else
         {
+
             Add_Employee_Option_Running = false;
         }
     }
@@ -844,17 +860,17 @@ bool Add_Employee_Option()
 // To check if employees code is valid
 bool IsCodeValid(string code)
 {
-    bool IsValid;
+    bool IsValid = true;
     
-    if(validate_numbers(code))
-    {
-        
-        
-    }
-    else 
+    if(validate_numbers(code) == false)
     {
         IsValid = false;
     }
+    if(IsDigitRepeating(code) == true)
+    {
+        IsValid = false;
+    }
+    return IsValid;
 }
 // Returnrs false if a digit is number in a number;
 bool IsDigitRepeating(string code)
@@ -881,4 +897,15 @@ bool IsDigitRepeating(string code)
     }
     return IsRepeating;
 }
-
+// admin option Employee Management see employee list;
+void Show_Employee_List()
+{
+    for (int idx = 0; idx < noofemployee;idx++)
+    {
+        cout << "Employee no: " << idx+1 << endl;
+        cout << endl;
+        cout << "Name: " << employee_names[idx] << endl;
+        cout << "Code: " << employee_code[idx] << endl;
+        cout << "------------------------------------" << endl;
+    }
+}
