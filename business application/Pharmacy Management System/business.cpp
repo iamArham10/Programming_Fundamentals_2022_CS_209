@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <fstream>
 using namespace std;
+const int sleepSpeed = 800;
 string admin_username = "admin";
-string admin_password = "123";
+string admin_password = "12345678";
 // user entered admin credentials are stored in the following strings;
 string get_admin_username;
 string get_admin_password;
@@ -71,42 +72,47 @@ int medicine_index(string name)
     }
     return 0;
 }
-bool remove_medicine(string name);
-bool isMedicinePresent(string);
-bool IsDigitRepeating(string);
-bool IsCodeValid(string);
-char get_option();
-void header();
-bool validate_numbers(string);
-void main_menu();
-void admin_header();
-bool exit_option(char);
-void admin_login_menu();
-bool admin_login();
-void get_admin_credentials();
-void get_admin_login();
-void wrong_option();
-void show_sales();
-void admin_options_menu();
-bool Take_Order(string, string);
-void update_medicine_price_option();
-bool add_medicine_data();
-void changemedicineprice(char);
-void admin_option_AddMedicine();
-void admin_option_Show_inventory();
-void admin_option_RemoveMedicine();
-bool Add_Employee_Option();
-bool Add_Employee(string username, string password, string code);
-void Show_Employee_List();
-void savemedicinesdatainfile();
-void readmedicinedata();
-void Admin_option_Employee();
-bool isEmployeePresent(string);
-bool validate_employee_code();
-void read_sold_record_from_file();
-void save_sold_record_in_file();
-void save_sold_record(string name, string quantity);
-string getdata(string, int);
+bool remove_medicine(string name); //to removes medicine from inventory
+bool isMedicinePresent(string); // checks if a medicine is present or not
+bool IsDigitRepeating(string); // returns true if there are any repeated digits
+bool IsCodeValid(string); // checks if a employee code is valid
+char get_option(); // to get option from a user
+string take_password(int); // inputs password and prints * on its place // takes no of password digit a parameter 
+void header(); // prints header of pharmacy management system
+void invalid_output(); // prints invalid entry 
+bool validate_quantity(string); // to validate quantities returns falls if user enterd number is 0 or negative
+bool validate_numbers(string); // returns true if user entered string has only digits in it
+void main_menu(); // prints main menu
+void admin_header(); // prints admin header
+bool exit_option(); // returns false if user has pressed 0 else falls
+void admin_login_menu(); // Prints Admin Login Menu
+bool admin_login(); // checks if user entered credentials are valid or not
+void get_admin_credentials(); // Takes Admin Credentials
+void wrong_option(); // prints selected wrong option
+void show_sales(); // shows sold items record
+void admin_options_menu();  // Prints Admin Menu Options
+bool Take_Order(string, string); // take order function takes medicine name and quantity as a Parameter
+void update_medicine_price_option(); // Prints Update Medicine price Option
+void admin_option_AddMedicine(); // Shows Add medicine Menu to user 
+bool add_medicine_data(); // Used to Add medicine to inventory
+void changemedicineprice(char); // Change medicine price takes Medicine number as Parameter
+void admin_option_Show_inventory(); // To print Inventory
+void admin_option_RemoveMedicine();  // Prints Remove Medicine Menu
+void admin_option_Show_Add_Employee_Option();
+bool Add_Employee_Option(); // inputs Employee Username password and code from user
+bool Add_Employee(string username, string password, string code); // Adds Employee data in its respective arrays
+void Show_Employee_List(); // Prints Current Employee Lists
+void savemedicinesdatainfile(); // To Save Medicine Data in a file
+void readmedicinedata(); // To Read Medicine Data from file
+void Admin_option_Employee(); // Prints admin Options Employee Management Menu
+bool isEmployeePresent(string); // Returns true if Entered Employee name is already present in an array
+bool validate_employee_code(); // To validate Employee code
+void save_employee_credentials(); // to save employee credentials in a file
+void read_employee_credentials(); // To Read Employee Credentials
+void read_sold_record_from_file(); // To read Sold data Record from a file
+void save_sold_record_in_file(); // To save Sold record data in a file
+void save_sold_record(string name, string quantity); // Saves sold record in an array
+string getdata(string, int); // To get required data separated by commas in a sentence read from a file.
 
 // main
 main()
@@ -120,6 +126,8 @@ main()
         readmedicinedata();
         // Reads Sales record from file
         read_sold_record_from_file();
+        // Reads Employee Credentials from a file
+        read_employee_credentials();
         system("cls");
         main_menu();
         // To take main Menu Options from user
@@ -161,15 +169,13 @@ main()
 
                                             string name;
                                             string quantity;
-
                                             cout << "Enter Medicine name:";
                                             cin >> name;
-
                                             if (isMedicinePresent(name))
                                             {
                                                 cout << "Enter Quantity: ";
                                                 cin >> quantity;
-                                                if (validate_numbers(quantity))
+                                                if (validate_numbers(quantity) && validate_quantity(quantity))
                                                 {
                                                     if (Take_Order(name, quantity))
                                                     {
@@ -180,20 +186,23 @@ main()
                                                     }
                                                     else
                                                     {
-
-                                                        cout << endl
-                                                             << "press 0 to exit or any other key to try again";
-                                                        char take_order_again = get_option();
-                                                        Taking_order = exit_option(take_order_again);
+                                                        
+                                                        Taking_order = exit_option();
                                                     }
+                                                }
+                                                else
+                                                {
+                                                    invalid_output();
+                                                    Taking_order = exit_option();
+                                                    Sleep(sleepSpeed);
                                                 }
                                             }
                                             else
                                             {
                                                 system("cls");
                                                 cout << "Medicine not Available" << endl;
-                                                cout << "Enter any key to try again or 0 to exit";
-                                                Taking_order = exit_option(get_option());
+
+                                                Taking_order = exit_option();
                                             }
                                         }
                                     }
@@ -213,10 +222,9 @@ main()
                                             else
                                             {
                                                 system("cls");
-                                                cout << "Medicine is already present";
-
-                                                Sleep(1000);
-                                                add_medicine_admin_option = exit_option(get_option());
+                                                cout << "Medicine is already present" << endl;
+                                                Sleep(sleepSpeed);
+                                                add_medicine_admin_option = exit_option();
                                             }
                                         }
                                     }
@@ -235,13 +243,13 @@ main()
                                                 savemedicinesdatainfile();
                                                 system("cls");
                                                 cout << "Medicine is Removed";
-                                                Sleep(1000);
+                                                Sleep(sleepSpeed);
                                             }
                                             else
                                             {
                                                 system("cls");
                                                 cout << "Medicine you entered is not present in inventory";
-                                                Sleep(1000);
+                                                Sleep(sleepSpeed);
                                             }
 
                                             break;
@@ -278,7 +286,6 @@ main()
                                     else if (get_admin_menu_option == '5')
                                     {
                                         show_sales();
-                                        getch();
                                     }
                                     else if (get_admin_menu_option == '6')
                                     {
@@ -295,7 +302,8 @@ main()
                                             }
                                             else if (get_admin_option_employee == '1')
                                             {
-                                                bool Add_Employee_Option_Running = Add_Employee_Option();
+                                                Add_Employee_Option();
+                                                save_employee_credentials();
                                                 admin_option_employee_running = false;
                                             }
                                             else if (get_admin_option_employee == '2')
@@ -327,6 +335,12 @@ main()
                                     }
                                 }
                             }
+                        }
+                        else
+                        {
+                            system("cls");
+                            cout << "Wrong Admin Credentials";
+                            Sleep(sleepSpeed);
                         }
                     }
                     else if (get_admin_option == '0')
@@ -373,8 +387,10 @@ string getdata(string sentence, int count)
     return word;
 }
 // exits if user has pressed 0 else tries again;
-bool exit_option(char c)
+bool exit_option()
 {
+    cout << "Enter any key to try again or 0 to exit";
+    char c = getch();
     bool Exit = true;
     if (c == '0')
     {
@@ -425,10 +441,17 @@ void changemedicineprice(char selectmedicinenumber)
     int selectednumber = selectmedicinenumber;
     selectednumber = selectednumber - 48;
     cout << endl
-         << "Price of medicine is " << medicines_prices[selectednumber - 1] << endl;
+         << "Price of medicine is " << medicines_prices[selectednumber - 1] << "Pkr" << endl;
     string price;
     cout << "Enter new price: ";
     cin >> price;
+    while ((!validate_numbers(price)) || (!validate_quantity(price)))
+    {
+        cout << "Invalid Entry Try Again" << endl;
+        cout << "Enter new price: ";
+        cin >> price;
+    }
+    
     medicines_prices[selectednumber - 1] = price;
 }
 // to check if option is correct.
@@ -448,19 +471,16 @@ bool validate_option(int option_numbers, char option)
 bool validate_numbers(string sentence)
 {
     char character;
-    bool valid;
+    bool valid = true;
     for (int idx = 0; sentence[idx] != '\0'; idx++)
     {
         character = sentence[idx];
-        int b = character;
+        int b = int(character);
 
-        if (b >= 48 && b <= 57)
-        {
-            valid = true;
-        }
-        else
+        if ((b < 48 || b > 57))
         {
             valid = false;
+            break;
         }
     }
     return valid;
@@ -527,7 +547,7 @@ void get_admin_credentials()
     gotoxy(15, 8);
     cin >> get_admin_username;
     gotoxy(15, 9);
-    cin >> get_admin_password;
+    get_admin_password = take_password(8);
 }
 // TO check if admin entered password and id is correct
 bool admin_login()
@@ -567,7 +587,7 @@ void update_medicine_price_option()
 {
 
     cout << "*                                                   *" << endl;
-    cout << " Enter medicine number:";
+    cout << " Select Medicine Number : ";
 }
 // To take order of medicine from user
 bool Take_Order(string name, string quantity)
@@ -629,11 +649,27 @@ bool add_medicine_data()
         medicines_names[medicine_number] = medicine;
         gotoxy(19, 9);
         cin >> medicines_mass[medicine_number];
+        while (!validate_quantity(medicines_mass[medicine_number]))
+        {
+            gotoxy(19, 9);
+            cin >> medicines_mass[medicine_number];
+        }
+
         gotoxy(18, 10);
         cin >> medicines_prices[medicine_number];
+        while (!validate_quantity(medicines_prices[medicine_number]))
+        {
+            gotoxy(18, 10);
+            cin >> medicines_prices[medicine_number];
+        }
+
         gotoxy(23, 11);
         cin >> medicines_quantities[medicine_number];
-
+        while (!validate_quantity(medicines_quantities[medicine_number]))
+        {
+            gotoxy(23, 11);
+            cin >> medicines_quantities[medicine_number];
+        }
         gotoxy(0, 0);
         medicine_number++;
         return true;
@@ -719,6 +755,7 @@ bool isMedicinePresent(string name)
 // used to show sales record
 void show_sales()
 {
+    system("cls");
     for (int idx = 0; idx < no_of_sold_medicines; idx++)
     {
         cout << "Order no : " << idx + 1 << endl;
@@ -731,6 +768,8 @@ void show_sales()
              << endl;
         cout << "-------------------------------------" << endl;
     }
+    cout << "Press Any key to Exit";
+    getch();
 }
 // to store sales in an array
 void save_sold_record(string name, string quantity)
@@ -788,6 +827,13 @@ void Admin_option_Employee()
     cout << "*                                                   *" << endl;
     cout << "*****************************************************" << endl;
 }
+// shows Admin Option Add Employee
+void admin_option_Show_Add_Employee_Option()
+{
+    admin_header();
+    cout << "* Add Employee                                      *" << endl;
+    cout << endl;
+}
 // to add Employee in an Employee array
 bool Add_Employee(string username, string password, string code)
 {
@@ -810,7 +856,7 @@ bool Add_Employee(string username, string password, string code)
         noofemployee++;
         is_employee_added = true;
     }
-    Sleep(1000);
+    Sleep(sleepSpeed);
     return is_employee_added;
 }
 // to check if new entered employee name is already registered
@@ -833,6 +879,8 @@ bool Add_Employee_Option()
     bool Add_Employee_Option_Running = true;
     while (Add_Employee_Option_Running)
     {
+        system("cls");
+        admin_option_Show_Add_Employee_Option();
         cout << "Enter Employee User name: ";
         string username;
         cin >> username;
@@ -846,15 +894,43 @@ bool Add_Employee_Option()
         {
             cout << "Employee Added Successfully";
             Add_Employee_Option_Running = false;
-            Sleep(1000);
+            Sleep(sleepSpeed);
         }
-        else
-        {
-
-            Add_Employee_Option_Running = false;
-        }
+        
     }
     return Add_Employee_Option_Running;
+}
+
+// saves Employee credentials in a file
+void save_employee_credentials()
+{
+    fstream file;
+    file.open("EmployeeCredentials.txt",ios::out);
+    for (int idx = 0; idx < noofemployee;idx++)
+    {
+        file << employee_names[idx] << "," << employee_passwords[idx] << "," << employee_code[idx]  << endl;
+    }
+    file.close();
+}
+
+void read_employee_credentials()
+{
+    fstream file;
+    file.open("EmployeeCredentials.txt",ios::in);
+    string sentence = "";
+    while(!file.eof())
+    {
+        getline(file,sentence);
+        if (sentence == "")
+        {
+            break;
+        }
+        employee_names[noofemployee] = getdata(sentence,1);
+        employee_passwords[noofemployee] = getdata(sentence,2);
+        employee_code[noofemployee] = getdata(sentence,3);
+        noofemployee++;        
+    }
+    file.close();
 }
 // To check if employees code is valid
 bool IsCodeValid(string code)
@@ -907,4 +983,44 @@ void Show_Employee_List()
         cout << "Code: " << employee_code[idx] << endl;
         cout << "------------------------------------" << endl;
     }
+}
+// to take password valid password from user.
+string take_password(int no_of_characters)
+{
+    string password;
+    char c;
+    for (int idx = 0; idx < no_of_characters; idx++)
+    {
+        c = getch();
+        cout << "*";
+        password = password + c;
+    }
+
+    while (true)
+    {
+        char Enter = getch();
+        if (Enter == 13)
+        {
+            break;
+        }
+    }
+
+    return password;
+}
+
+bool validate_quantity(string quantity)
+{
+    int Quantity = stoi(quantity);
+    bool IsValid = true;
+    if (Quantity < 0 || Quantity == 0)
+    {
+        IsValid = false;
+    }
+    return IsValid;
+}
+
+void invalid_output()
+{
+    system("cls");
+    cout << "InValid Entry" << endl;
 }
