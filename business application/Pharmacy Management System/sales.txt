@@ -6,3 +6,4 @@ Parcetamol,5a,2995
 Parcetamol,33,19767
 Ephedrine,56,50344
 Parcetamol,5s,2995
+Panadol,50,50000

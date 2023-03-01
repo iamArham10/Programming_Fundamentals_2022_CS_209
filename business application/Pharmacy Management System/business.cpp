@@ -171,22 +171,21 @@ main()
                                                 cin >> quantity;
                                                 if (validate_numbers(quantity))
                                                 {
-                                                    getch();
-                                                }
-                                                if (Take_Order(name, quantity))
-                                                {
-                                                    save_sold_record(name, quantity);
-                                                    savemedicinesdatainfile();
-                                                    save_sold_record_in_file();
-                                                    Taking_order = false;
-                                                }
-                                                else
-                                                {
+                                                    if (Take_Order(name, quantity))
+                                                    {
+                                                        save_sold_record(name, quantity);
+                                                        savemedicinesdatainfile();
+                                                        save_sold_record_in_file();
+                                                        Taking_order = false;
+                                                    }
+                                                    else
+                                                    {
 
-                                                    cout << endl
-                                                         << "press 0 to exit or any other key to try again";
-                                                    char take_order_again = get_option();
-                                                    Taking_order = exit_option(take_order_again);
+                                                        cout << endl
+                                                             << "press 0 to exit or any other key to try again";
+                                                        char take_order_again = get_option();
+                                                        Taking_order = exit_option(take_order_again);
+                                                    }
                                                 }
                                             }
                                             else
@@ -837,10 +836,10 @@ bool Add_Employee_Option()
         cout << "Enter Employee User name: ";
         string username;
         cin >> username;
-        cout <<"Enter Employee Password: ";
+        cout << "Enter Employee Password: ";
         string userpassword;
         cin >> userpassword;
-        cout <<"Enter Employee features code: ";
+        cout << "Enter Employee features code: ";
         string code;
         cin >> code;
         if (Add_Employee(username, admin_password, code))
@@ -861,12 +860,12 @@ bool Add_Employee_Option()
 bool IsCodeValid(string code)
 {
     bool IsValid = true;
-    
-    if(validate_numbers(code) == false)
+
+    if (validate_numbers(code) == false)
     {
         IsValid = false;
     }
-    if(IsDigitRepeating(code) == true)
+    if (IsDigitRepeating(code) == true)
     {
         IsValid = false;
     }
@@ -878,10 +877,10 @@ bool IsDigitRepeating(string code)
     bool IsRepeating = false;
     int firstdigit;
     int seconddigit;
-    for (int idx = 0; code[idx] != '\0' ;idx++)
+    for (int idx = 0; code[idx] != '\0'; idx++)
     {
         firstdigit = code[idx];
-        for (int itx = idx + 1; code[itx] != '\0';itx++)
+        for (int itx = idx + 1; code[itx] != '\0'; itx++)
         {
             if (idx == itx)
             {
@@ -900,9 +899,9 @@ bool IsDigitRepeating(string code)
 // admin option Employee Management see employee list;
 void Show_Employee_List()
 {
-    for (int idx = 0; idx < noofemployee;idx++)
+    for (int idx = 0; idx < noofemployee; idx++)
     {
-        cout << "Employee no: " << idx+1 << endl;
+        cout << "Employee no: " << idx + 1 << endl;
         cout << endl;
         cout << "Name: " << employee_names[idx] << endl;
         cout << "Code: " << employee_code[idx] << endl;
