@@ -10,6 +10,9 @@ string admin_password = "12345678";
 // user entered admin credentials are stored in the following strings;
 string get_admin_username;
 string get_admin_password;
+// user entered employee credentials are storered in string
+string current_employee_username;
+string current_employee_password;
 // employee data arrays
 string employee_names[20];
 string employee_passwords[20];
@@ -72,47 +75,208 @@ int medicine_index(string name)
     }
     return 0;
 }
-bool remove_medicine(string name); //to removes medicine from inventory
-bool isMedicinePresent(string); // checks if a medicine is present or not
-bool IsDigitRepeating(string); // returns true if there are any repeated digits
-bool IsCodeValid(string); // checks if a employee code is valid
-char get_option(); // to get option from a user
-string take_password(int); // inputs password and prints * on its place // takes no of password digit a parameter 
-void header(); // prints header of pharmacy management system
-void invalid_output(); // prints invalid entry 
-bool validate_quantity(string); // to validate quantities returns falls if user enterd number is 0 or negative
-bool validate_numbers(string); // returns true if user entered string has only digits in it
-void main_menu(); // prints main menu
-void admin_header(); // prints admin header
-bool exit_option(); // returns false if user has pressed 0 else falls
-void admin_login_menu(); // Prints Admin Login Menu
-bool admin_login(); // checks if user entered credentials are valid or not
-void get_admin_credentials(); // Takes Admin Credentials
-void wrong_option(); // prints selected wrong option
-void show_sales(); // shows sold items record
-void admin_options_menu();  // Prints Admin Menu Options
-bool Take_Order(string, string); // take order function takes medicine name and quantity as a Parameter
-void update_medicine_price_option(); // Prints Update Medicine price Option
-void admin_option_AddMedicine(); // Shows Add medicine Menu to user 
-bool add_medicine_data(); // Used to Add medicine to inventory
-void changemedicineprice(char); // Change medicine price takes Medicine number as Parameter
-void admin_option_Show_inventory(); // To print Inventory
-void admin_option_RemoveMedicine();  // Prints Remove Medicine Menu
-void admin_option_Show_Add_Employee_Option();
-bool Add_Employee_Option(); // inputs Employee Username password and code from user
-bool Add_Employee(string username, string password, string code); // Adds Employee data in its respective arrays
-void Show_Employee_List(); // Prints Current Employee Lists
-void savemedicinesdatainfile(); // To Save Medicine Data in a file
-void readmedicinedata(); // To Read Medicine Data from file
-void Admin_option_Employee(); // Prints admin Options Employee Management Menu
-bool isEmployeePresent(string); // Returns true if Entered Employee name is already present in an array
-bool validate_employee_code(); // To validate Employee code
-void save_employee_credentials(); // to save employee credentials in a file
-void read_employee_credentials(); // To Read Employee Credentials
-void read_sold_record_from_file(); // To read Sold data Record from a file
-void save_sold_record_in_file(); // To save Sold record data in a file
-void save_sold_record(string name, string quantity); // Saves sold record in an array
-string getdata(string, int); // To get required data separated by commas in a sentence read from a file.
+bool remove_medicine(string name);                                 // to removes medicine from inventory
+bool check_digit_present(string, char);                            // To Check if a character is present in a string
+bool isMedicinePresent(string);                                    // checks if a medicine is present or not
+bool IsDigitRepeating(string);                                     // returns true if there are any repeated digits
+bool IsCodeValid(string);                                          // checks if a employee code is valid
+char get_option();                                                 // to get option from a user
+string take_password(int);                                         // inputs password and prints * on its place // takes no of password digit a parameter
+void header();                                                     // prints header of pharmacy management system
+void invalid_output();                                             // prints invalid entry
+bool validate_quantity(string);                                    // to validate quantities returns falls if user enterd number is 0 or negative
+bool validate_numbers(string);                                     // returns true if user entered string has only digits in it
+void main_menu();                                                  // prints main menu
+void admin_header();                                               // prints admin header
+bool exit_option();                                                // returns false if user has pressed 0 else falls
+void admin_login_menu();                                           // Prints Admin Login Menu
+bool admin_login();                                                // checks if user entered credentials are valid or not
+void get_admin_credentials();                                      // Takes Admin Credentials
+void wrong_option();                                               // prints selected wrong option
+void admin_options_menu();                                         // Prints Admin Menu Options
+bool Take_Order(string, string);                                   // take order function takes medicine name and quantity as a Parameter
+void update_medicine_price_option();                               // Prints Update Medicine price Option
+void AddMedicine_Menu();                                           // Shows Add medicine Menu to user
+bool add_medicine_data();                                          // Used to Add medicine to inventory
+void changemedicineprice(char);                                    // Change medicine price takes Medicine number as Parameter
+void admin_option_Show_inventory();                                // To print Inventory
+void admin_option_RemoveMedicine();                                // Prints Remove Medicine Menu
+void admin_option_Show_Add_Employee_Option();                      // prints admin option add employee menu
+void Employee_Login_menu();                                        // Prints Employee Login Menu
+bool Check_Employee_credentials(string username, string password); // returns true if user entered employee credentials are matched with any employee
+bool Add_Employee_Option();                                        // inputs Employee Username password and code from user
+bool Add_Employee(string username, string password, string code);  // Adds Employee data in its respective arrays
+void remove_Employe_menu();                                        // Shows Remove Employee Menu
+bool remove_Employee(string name);                                 // To remove Employee from array
+void Show_Employee_List();                                         // Prints Current Employee Lists
+void savemedicinesdatainfile();                                    // To Save Medicine Data in a file
+void readmedicinedata();                                           // To Read Medicine Data from file
+bool changeEmployeeFeature();                                      // To change Employee Feature
+int GetEmployeeIndex(string);                                      // retursn entered employee index
+void Admin_option_Employee();                                      // Prints admin Options Employee Management Menu
+bool get_employee_credentials();                                   // Gets employee username and password from user
+bool isEmployeePresent(string);                                    // Returns true if Entered Employee name is already present in an array
+void employee_options_menu();                                      // Prints Employee Option Menu
+void save_employee_credentials();                                  // to save employee credentials in a file
+void read_employee_credentials();                                  // To Read Employee Credentials
+void read_sold_record_from_file();                                 // To read Sold data Record from a file
+void save_sold_record_in_file();                                   // To save Sold record data in a file
+void save_sold_record(string name, string quantity);               // Saves sold record in an array
+string getdata(string, int);                                       // To get required data separated by commas in a sentence read from a file.
+// All option functions
+bool To_Take_Order(bool Taking_order)
+{
+    while (Taking_order)
+    {
+        admin_option_Show_inventory();
+        string name;
+        string quantity;
+        cout << "Enter Medicine name:";
+        cin >> name;
+        if (isMedicinePresent(name))
+        {
+            cout << "Enter Quantity: ";
+            cin >> quantity;
+            if (validate_numbers(quantity) && validate_quantity(quantity))
+            {
+                if (Take_Order(name, quantity))
+                {
+                    save_sold_record(name, quantity);
+                    savemedicinesdatainfile();
+                    save_sold_record_in_file();
+                    Taking_order = false;
+                }
+                else
+                {
+
+                    Taking_order = exit_option();
+                }
+            }
+            else
+            {
+                invalid_output();
+                Taking_order = exit_option();
+                Sleep(sleepSpeed);
+            }
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine not Available" << endl;
+
+            Taking_order = exit_option();
+        }
+    }
+}
+bool To_Add_Medicine(bool Add_Medicine)
+{
+    while (Add_Medicine)
+    {
+        AddMedicine_Menu();
+        if (add_medicine_data())
+        {
+            savemedicinesdatainfile();
+            system("cls");
+            cout << "Medicine is added Successfully";
+            Add_Medicine = false;
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine is already present" << endl;
+            Sleep(sleepSpeed);
+            Add_Medicine = exit_option();
+        }
+    }
+}
+bool To_Remove_Medicine(bool Removing_Medicine)
+{
+
+    while (Removing_Medicine)
+    {
+        system("cls");
+        admin_header();
+        admin_option_Show_inventory();
+        admin_option_RemoveMedicine();
+        string name;
+        getline(cin >> ws, name);
+        if (remove_medicine(name))
+        {
+            savemedicinesdatainfile();
+            system("cls");
+            cout << "Medicine is Removed";
+            Sleep(sleepSpeed);
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine you entered is not present in inventory";
+            Sleep(sleepSpeed);
+        }
+
+        Removing_Medicine = false;
+    }
+}
+bool To_Change_Medicine_price(bool Changing_Price)
+{
+    while (Changing_Price)
+    {
+        system("cls");
+        admin_option_Show_inventory();
+        update_medicine_price_option();
+        char selectmedicinenumber = get_option();
+
+        if (validate_option(medicine_number + 1, selectmedicinenumber))
+        {
+            changemedicineprice(selectmedicinenumber);
+            savemedicinesdatainfile();
+            Changing_Price = false;
+        }
+        else
+        {
+            wrong_option();
+            char option = get_option();
+            if (option == '0')
+            {
+                Changing_Price = false;
+                ;
+            }
+        }
+    }
+}
+void show_sales()
+{
+    system("cls");
+    for (int idx = 0; idx < no_of_sold_medicines; idx++)
+    {
+        cout << "Order no : " << idx + 1 << endl;
+        cout << "Medicine name: ";
+        cout << sold_medicines_names[idx] << endl;
+        cout << "Quantities sold: ";
+        cout << sold_medicine_quantities[idx] << endl;
+        cout << "Payment Received: ";
+        cout << amount_received[idx] << endl
+             << endl;
+        cout << "-------------------------------------" << endl;
+    }
+    cout << "Press Any key to Exit";
+    getch();
+}
+bool To_Show_Inventory(bool Showing_Inventory)
+{
+    while (Showing_Inventory)
+    {
+
+        admin_option_Show_inventory();
+        cout << "Press 0 to exit";
+        char get_inventory_exit = get_option();
+        if (get_inventory_exit == '0')
+        {
+            break;
+        }
+    }
+}
+
 
 // main
 main()
@@ -162,126 +326,24 @@ main()
                                 {
                                     if (get_admin_menu_option == '1')
                                     {
-                                        bool Taking_order = true;
-                                        while (Taking_order)
-                                        {
-                                            admin_option_Show_inventory();
-
-                                            string name;
-                                            string quantity;
-                                            cout << "Enter Medicine name:";
-                                            cin >> name;
-                                            if (isMedicinePresent(name))
-                                            {
-                                                cout << "Enter Quantity: ";
-                                                cin >> quantity;
-                                                if (validate_numbers(quantity) && validate_quantity(quantity))
-                                                {
-                                                    if (Take_Order(name, quantity))
-                                                    {
-                                                        save_sold_record(name, quantity);
-                                                        savemedicinesdatainfile();
-                                                        save_sold_record_in_file();
-                                                        Taking_order = false;
-                                                    }
-                                                    else
-                                                    {
-                                                        
-                                                        Taking_order = exit_option();
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    invalid_output();
-                                                    Taking_order = exit_option();
-                                                    Sleep(sleepSpeed);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                system("cls");
-                                                cout << "Medicine not Available" << endl;
-
-                                                Taking_order = exit_option();
-                                            }
-                                        }
+                                        bool Taking_Order = true;
+                                        To_Take_Order(Taking_Order);
                                     }
                                     else if (get_admin_menu_option == '2')
                                     {
-                                        bool add_medicine_admin_option = true;
-                                        while (add_medicine_admin_option)
-                                        {
-                                            admin_option_AddMedicine();
-                                            if (add_medicine_data())
-                                            {
-                                                savemedicinesdatainfile();
-                                                system("cls");
-                                                cout << "Medicine is added Successfully";
-                                                add_medicine_admin_option = false;
-                                            }
-                                            else
-                                            {
-                                                system("cls");
-                                                cout << "Medicine is already present" << endl;
-                                                Sleep(sleepSpeed);
-                                                add_medicine_admin_option = exit_option();
-                                            }
-                                        }
+                                        bool addingMedicine = true;
+                                        To_Add_Medicine(addingMedicine);
                                     }
                                     else if (get_admin_menu_option == '3')
                                     {
-                                        while (true)
-                                        {
-                                            system("cls");
-                                            admin_header();
-                                            admin_option_Show_inventory();
-                                            admin_option_RemoveMedicine();
-                                            string name;
-                                            getline(cin, name);
-                                            if (remove_medicine(name))
-                                            {
-                                                savemedicinesdatainfile();
-                                                system("cls");
-                                                cout << "Medicine is Removed";
-                                                Sleep(sleepSpeed);
-                                            }
-                                            else
-                                            {
-                                                system("cls");
-                                                cout << "Medicine you entered is not present in inventory";
-                                                Sleep(sleepSpeed);
-                                            }
-
-                                            break;
-                                        }
+                                        bool Removing_Medicine = true;
+                                        To_Remove_Medicine(Removing_Medicine);
                                     }
 
                                     else if (get_admin_menu_option == '4')
                                     {
-                                        bool medicine_update_option_running = true;
-                                        while (medicine_update_option_running)
-                                        {
-                                            system("cls");
-                                            admin_option_Show_inventory();
-                                            update_medicine_price_option();
-                                            char selectmedicinenumber = get_option();
-
-                                            if (validate_option(medicine_number + 1, selectmedicinenumber))
-                                            {
-                                                changemedicineprice(selectmedicinenumber);
-                                                savemedicinesdatainfile();
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                wrong_option();
-                                                char option = get_option();
-                                                if (option == '0')
-                                                {
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                        bool change_medicine_price = true;
+                                        To_Change_Medicine_price(change_medicine_price);
                                     }
                                     else if (get_admin_menu_option == '5')
                                     {
@@ -302,32 +364,49 @@ main()
                                             }
                                             else if (get_admin_option_employee == '1')
                                             {
-                                                Add_Employee_Option();
-                                                save_employee_credentials();
-                                                admin_option_employee_running = false;
+                                                bool addemployeerunning = true;
+                                                while (addemployeerunning)
+                                                if (Add_Employee_Option())
+                                                {
+                                                    save_employee_credentials();
+                                                    addemployeerunning = false;
+                                                }
+                                                else
+                                                {
+                                                    system("cls");
+                                                    cout << endl << "Enter 0 to exit or any other key to try again";
+                                                    char c = getch();
+                                                    if (c=='0')
+                                                    {
+                                                        addemployeerunning == false;
+                                                    }
+                                                }
+                                                
                                             }
                                             else if (get_admin_option_employee == '2')
                                             {
                                                 system("cls");
                                                 Show_Employee_List();
+                                                cout << "Press Any key To Exit";
                                                 getch();
+                                            }
+                                            else if (get_admin_option_employee == '3')
+                                            {
+
+                                                changeEmployeeFeature();
+                                                save_employee_credentials();
+                                            }
+                                            else if (get_admin_option_employee == '4')
+                                            {
+                                                remove_Employe_menu();
+                                                save_employee_credentials();
                                             }
                                         }
                                     }
                                     else if (get_admin_menu_option == '7')
                                     {
                                         bool showing_inventory = true;
-                                        while (showing_inventory)
-                                        {
-
-                                            admin_option_Show_inventory();
-                                            cout << "Press 0 to exit";
-                                            char get_inventory_exit = get_option();
-                                            if (get_inventory_exit == '0')
-                                            {
-                                                break;
-                                            }
-                                        }
+                                        To_Show_Inventory(showing_inventory);
                                     }
                                     else if (get_admin_menu_option == '0')
                                     {
@@ -351,20 +430,106 @@ main()
             }
             else if (main_menu_option == '2')
             {
-                continue;
+
+                while (true)
+                {
+                    system("cls");
+                    Employee_Login_menu();
+
+                    char c = getch();
+                    if (c == '0')
+                    {
+                        break;
+                    }
+                    else if (c == '1')
+                    {
+                        get_employee_credentials();
+                        if (Check_Employee_credentials(current_employee_username, current_employee_password))
+                        {
+                            bool Employee_Menu_running = true;
+                            while (Employee_Menu_running)
+                            {
+                                employee_options_menu();
+                                char Employee_Menu_Option = getch();
+                                if (Employee_Menu_Option == '1')
+                                {
+                                    if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
+                                    {
+                                        bool Taking_Order = true;
+                                        To_Take_Order(Taking_Order);
+                                    }
+                                    else
+                                    {
+                                        system("cls");
+                                        cout << "Feature is not allowed";
+                                        getch();
+                                    }
+                                }
+                                if (Employee_Menu_Option == '2')
+                                {
+                                    if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
+                                    {
+                                        bool add_medicine_admin_option = true;
+                                        To_Add_Medicine(add_medicine_admin_option);
+                                    }
+                                    else
+                                    {
+                                        system("cls");
+                                        cout << "Feature is not allowed";
+                                        getch();
+                                    }
+                                }
+                                if (Employee_Menu_Option == '3')
+                                {
+                                    if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
+                                    {
+                                        bool Removing_Medicine = true;
+                                        To_Remove_Medicine(Removing_Medicine);
+                                    }
+                                    else
+                                    {
+                                        system("cls");
+                                        cout << "Feature is not allowed";
+                                        getch();
+                                    }
+                                }
+                                if (Employee_Menu_Option == '4')
+                                {
+                                    if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
+                                    {
+                                        bool Changing_Price = true;
+                                        To_Change_Medicine_price(Changing_Price);
+                                    }
+                                }
+                                if (Employee_Menu_Option == '5')
+                                {
+                                    show_sales();
+                                }
+                                if (Employee_Menu_Option == '6')
+                                {
+                                    bool Showing_Inventory = true;
+                                    To_Show_Inventory(Showing_Inventory);
+                                }
+                                if (Employee_Menu_Option == '0')
+                                {
+                                    Employee_Menu_running = false;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else if (main_menu_option == '0')
             {
                 break;
             }
-        }
-
-        else
-        {
-            system("cls");
-            gotoxy(0, 18);
-            cout << "Wrong Option try again";
-            continue;
+            else
+            {
+                system("cls");
+                gotoxy(0, 18);
+                cout << "Wrong Option try again";
+                continue;
+            }
         }
     }
 }
@@ -409,14 +574,12 @@ void readmedicinedata()
     while (!file.eof())
     {
         string sentence;
-
-        getline(file, sentence);
+        getline(file >> ws, sentence);
         if (getdata(sentence, 1) == "")
         {
             break;
         }
         medicines_names[medicine_number] = getdata(sentence, 1);
-
         medicines_mass[medicine_number] = getdata(sentence, 2);
         medicines_prices[medicine_number] = getdata(sentence, 3);
         medicines_quantities[medicine_number] = getdata(sentence, 4);
@@ -451,7 +614,7 @@ void changemedicineprice(char selectmedicinenumber)
         cout << "Enter new price: ";
         cin >> price;
     }
-    
+
     medicines_prices[selectednumber - 1] = price;
 }
 // to check if option is correct.
@@ -528,6 +691,12 @@ void admin_header()
     header();
     cout << "************************Admin************************" << endl;
 }
+
+void employee_header()
+{
+    header();
+    cout << "***********************Employee**********************" << endl;
+}
 // TO show Admin login menu
 void admin_login_menu()
 {
@@ -566,7 +735,6 @@ bool admin_login()
 void admin_options_menu()
 {
     system("cls");
-
     admin_header();
     cout << "*   user > " << admin_username << "                                    *" << endl;
     cout << "*                                                   *" << endl;
@@ -625,7 +793,7 @@ bool Take_Order(string name, string quantity)
     }
 }
 // TO Show Admin Option add medicine
-void admin_option_AddMedicine()
+void AddMedicine_Menu()
 {
     system("cls");
     admin_header();
@@ -706,6 +874,59 @@ void admin_option_RemoveMedicine()
     cout << "*                                                   *" << endl;
     cout << "    Medicine name:";
 }
+// shows remove Employee Menu;
+void remove_Employe_menu()
+{
+    system("cls");
+    Show_Employee_List();
+    cout << endl;
+    cout << "Enter Employee Name: ";
+    string name;
+    getline(cin >> ws, name);
+    if (remove_Employee(name))
+    {
+        save_employee_credentials();
+        system("cls");
+        cout << "Employee Is Removed";
+        Sleep(sleepSpeed);
+    }
+    else
+    {
+        system("cls");
+        cout << "Employee you entered is not present" << endl;
+        Sleep(sleepSpeed);
+    }
+}
+// TO remove Employee
+bool remove_Employee(string name)
+{
+    bool employee_removed = false;
+    if (isEmployeePresent(name))
+    {
+        for (int idx = 0; idx < noofemployee; idx++)
+        {
+            if (employee_names[idx] == name)
+            {
+                for (int itx = idx; itx < noofemployee; itx++)
+                {
+                    if (itx == noofemployee - 1)
+                    {
+                        employee_names[itx] = '\0';
+                        employee_passwords[itx] = '\0';
+                        employee_code[itx] = '\0';
+                        noofemployee = noofemployee - 1;
+                    }
+                    employee_names[itx] = employee_names[itx + 1];
+                    employee_passwords[itx] = employee_passwords[itx + 1];
+                    employee_code[itx] = employee_code[itx + 1];
+                }
+                employee_removed = true;
+                break;
+            }
+        }
+    }
+    return employee_removed;
+}
 // TO remove medicines from medicines list.
 bool remove_medicine(string name)
 {
@@ -753,24 +974,7 @@ bool isMedicinePresent(string name)
     return present;
 }
 // used to show sales record
-void show_sales()
-{
-    system("cls");
-    for (int idx = 0; idx < no_of_sold_medicines; idx++)
-    {
-        cout << "Order no : " << idx + 1 << endl;
-        cout << "Medicine name: ";
-        cout << sold_medicines_names[idx] << endl;
-        cout << "Quantities sold: ";
-        cout << sold_medicine_quantities[idx] << endl;
-        cout << "Payment Received: ";
-        cout << amount_received[idx] << endl
-             << endl;
-        cout << "-------------------------------------" << endl;
-    }
-    cout << "Press Any key to Exit";
-    getch();
-}
+
 // to store sales in an array
 void save_sold_record(string name, string quantity)
 {
@@ -801,7 +1005,7 @@ void read_sold_record_from_file()
     while (!file.eof())
     {
         string sentence;
-        getline(file, sentence);
+        getline(file >> ws, sentence);
         if (getdata(sentence, 1) == "")
         {
             break;
@@ -819,11 +1023,12 @@ void Admin_option_Employee()
     admin_header();
     cout << "*                                                   *" << endl;
     cout << "* Employee Management                               *" << endl;
-    cout << "*      Press the following keys                     *" << endl;
-    cout << "*          1. Create Employee List                  *" << endl;
-    cout << "*          2. See Employee List                     *" << endl;
-    cout << "*          3. Change Employee Features              *" << endl;
-    cout << "*                                                   *" << endl;
+    cout << "*  Press the following keys                         *" << endl;
+    cout << "*    1. Create Employee List                        *" << endl;
+    cout << "*    2. See Employee List                           *" << endl;
+    cout << "*    3. Change Employee Features                    *" << endl;
+    cout << "*    4. Delete Employee                             *" << endl;
+    cout << "*    0. Exit                                        *" << endl;
     cout << "*                                                   *" << endl;
     cout << "*****************************************************" << endl;
 }
@@ -886,8 +1091,8 @@ bool Add_Employee_Option()
         cin >> username;
         cout << "Enter Employee Password: ";
         string userpassword;
-        cin >> userpassword;
-        cout << "Enter Employee features code: ";
+        userpassword = take_password(8);
+        cout << endl << "Enter Employee features code: ";
         string code;
         cin >> code;
         if (Add_Employee(username, admin_password, code))
@@ -896,7 +1101,6 @@ bool Add_Employee_Option()
             Add_Employee_Option_Running = false;
             Sleep(sleepSpeed);
         }
-        
     }
     return Add_Employee_Option_Running;
 }
@@ -905,10 +1109,10 @@ bool Add_Employee_Option()
 void save_employee_credentials()
 {
     fstream file;
-    file.open("EmployeeCredentials.txt",ios::out);
-    for (int idx = 0; idx < noofemployee;idx++)
+    file.open("EmployeeCredentials.txt", ios::out);
+    for (int idx = 0; idx < noofemployee; idx++)
     {
-        file << employee_names[idx] << "," << employee_passwords[idx] << "," << employee_code[idx]  << endl;
+        file << employee_names[idx] << "," << employee_passwords[idx] << "," << employee_code[idx] << endl;
     }
     file.close();
 }
@@ -916,19 +1120,19 @@ void save_employee_credentials()
 void read_employee_credentials()
 {
     fstream file;
-    file.open("EmployeeCredentials.txt",ios::in);
+    file.open("EmployeeCredentials.txt", ios::in);
     string sentence = "";
-    while(!file.eof())
+    while (!file.eof())
     {
-        getline(file,sentence);
-        if (sentence == "")
+        getline(file >> ws, sentence);
+        if (getdata(sentence,1) == "")
         {
             break;
         }
-        employee_names[noofemployee] = getdata(sentence,1);
-        employee_passwords[noofemployee] = getdata(sentence,2);
-        employee_code[noofemployee] = getdata(sentence,3);
-        noofemployee++;        
+        employee_names[noofemployee] = getdata(sentence, 1);
+        employee_passwords[noofemployee] = getdata(sentence, 2);
+        employee_code[noofemployee] = getdata(sentence, 3);
+        noofemployee++;
     }
     file.close();
 }
@@ -1007,10 +1211,14 @@ string take_password(int no_of_characters)
 
     return password;
 }
-
+// to validate number of amount
 bool validate_quantity(string quantity)
 {
+    for (int idx = 0; quantity[idx] != '\0'; idx++)
+    {
+    }
     int Quantity = stoi(quantity);
+
     bool IsValid = true;
     if (Quantity < 0 || Quantity == 0)
     {
@@ -1018,9 +1226,147 @@ bool validate_quantity(string quantity)
     }
     return IsValid;
 }
-
+// prints that user has entered an invalid entry
 void invalid_output()
 {
     system("cls");
     cout << "InValid Entry" << endl;
+}
+// returns Employee index
+int GetEmployeeIndex(string name)
+{
+    for (int idx = 0; idx < noofemployee; idx++)
+    {
+        if (employee_names[idx] == name)
+        {
+            return idx;
+        }
+    }
+}
+bool changeEmployeeFeature()
+{
+    while (true)
+    {
+        system("cls");
+        Show_Employee_List();
+        cout << "Enter Employee Name: ";
+        string name;
+        getline(cin >> ws, name);
+        if (isEmployeePresent(name))
+        {
+            cout << "Current Employee Code is " << employee_code[GetEmployeeIndex(name)] << endl;
+            cout << "Enter new code: ";
+            string code;
+            getline(cin >> ws, code);
+            while (!IsCodeValid(code))
+            {
+                cout << "Invalid input" << endl;
+                cout << "Type Again: ";
+                getline(cin >> ws, code);
+            }
+            employee_code[GetEmployeeIndex(name)] = code;
+            system("cls");
+            cout << "Emplyee feature changed successfully" << endl;
+            return exit_option();
+            Sleep(sleepSpeed);
+        }
+        else
+        {
+            invalid_output();
+            cout << "Enter any key to try again or 0 to exit";
+            char c = getch();
+            if (c == '0')
+            {
+                return false;
+            }
+            Sleep(sleepSpeed);
+            return false;
+        }
+    }
+}
+
+void Employee_Login_menu()
+{
+    employee_header();
+    cout << "*  <login>                                          *" << endl;
+    cout << "*  1 to login or 0 to get back                      *" << endl;
+    cout << "*  Enter:                                           *" << endl;
+    cout << "*    User name:                                     *" << endl;
+    cout << "*    Password :                                     *" << endl;
+    cout << "*                                                   *" << endl;
+    cout << "*****************************************************" << endl;
+}
+
+bool get_employee_credentials()
+{
+    gotoxy(15, 8);
+    cin >> current_employee_username;
+    gotoxy(15, 9);
+    current_employee_password = take_password(8);
+}
+
+bool Check_Employee_credentials(string username, string password)
+{
+    bool EmployeeLogin;
+    for (int idx = 0; idx < noofemployee; idx++)
+    {
+        if (username == employee_names[idx])
+        {
+            if (password == employee_passwords[idx])
+            {
+                system("cls");
+                cout << "Employee Logged in successfully" << endl;
+                EmployeeLogin = true;
+                break;
+            }
+            else
+            {
+                system("cls");
+                cout << "Wrong Password" << endl;
+                EmployeeLogin = false;
+                break;
+            }
+        }
+        else
+        {
+            system("cls");
+            cout << "Employee Not Present";
+            EmployeeLogin = false;
+            break;
+        }
+    }
+    Sleep(sleepSpeed);
+    return EmployeeLogin;
+}
+// prints Employee Options Menu
+void employee_options_menu()
+{
+    system("cls");
+    employee_header();
+    cout << "   <" << current_employee_username << ">" << endl;
+    cout << "*                                                   *" << endl;
+    cout << "*   Press Requested Key:                            *" << endl;
+    cout << "*     1. Take Order.                                *" << endl;
+    cout << "*     2. Add Medicines.                             *" << endl;
+    cout << "*     3. Remove Medicines.                          *" << endl;
+    cout << "*     4. Update Medicines Price.                    *" << endl;
+    cout << "*     5. Show Sales Record.                         *" << endl;
+    cout << "*     6. Show inventory.                            *" << endl;
+    cout << "*     0. Back                                       *" << endl;
+    cout << "*                                                   *" << endl;
+    cout << "*****************************************************" << endl;
+}
+
+// checks if a digit is present or not
+bool check_digit_present(string code, char c)
+{
+    bool isPresent = false;
+    for (int idx = 0; code[idx] != '\0'; idx++)
+    {
+        if (code[idx] == c)
+        {
+            isPresent = true;
+        }
+    }
+    return isPresent;
 }

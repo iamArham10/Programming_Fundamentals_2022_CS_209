@@ -39,3 +39,6 @@ Panadol,20,20000
 Parcetamol,25,14975
 Panadol,200,2000000
 Parcetamol,50,10000
+Panadol,20,19980
+Panadol,25,24975
+Panadol,25,24975
