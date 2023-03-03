@@ -487,47 +487,39 @@ void To_Change_Medicine_price()
         update_medicine_price_option();
         char selectmedicinenumber = get_option();
 
-        if (validate_option(medicine_number + 1, selectmedicinenumber))
-        {
-            changemedicineprice(selectmedicinenumber);
-            savemedicinesdatainfile();
-            Changing_Price = false;
-        }
-        else
-        {
-            wrong_option();
-            char option = get_option();
-            if (option == '0')
-            {
-                Changing_Price = false;
-                ;
-            }
-        }
-    }
-}
-void show_sales()
-{
-    system("cls");
-    for (int idx = 0; idx < no_of_sold_medicines; idx++)
-    {
-        cout << "Order no : " << idx + 1 << endl;
-        cout << "Medicine name: ";
-        cout << sold_medicines_names[idx] << endl;
-        cout << "Quantities sold: ";
-        cout << sold_medicine_quantities[idx] << endl;
-        cout << "Payment Received: ";
-        cout << amount_received[idx] << endl
-             << endl;
-        cout << "-------------------------------------" << endl;
-    }
-    cout << "Press Any key to Exit";
-    getch();
-}
-void To_Show_Inventory()
-{
-    bool Showing_Inventory = true;
-    while (Showing_Inventory)
-    {
+                                            if (validate_option(medicine_number + 1, selectmedicinenumber))
+                                            {
+                                                changemedicineprice(selectmedicinenumber);
+                                                savemedicinesdatainfile();
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                wrong_option();
+                                                char option = get_option();
+                                                if (option == '0')
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (get_admin_menu_option == '5')
+                                    {
+                                        show_sales();
+                                        getch();
+                                    }
+                                    else if (get_admin_menu_option == '6')
+                                    {
+                                        system("cls");
+                                        Admin_option_Employee();
+                                        getch();
+                                    }
+                                    else if (get_admin_menu_option == '7')
+                                    {
+                                        bool showing_inventory = true;
+                                        while (showing_inventory)
+                                        {
 
         admin_option_Show_inventory();
         cout << "Press 0 to exit";
