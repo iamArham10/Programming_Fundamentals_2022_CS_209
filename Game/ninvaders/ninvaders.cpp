@@ -1,7 +1,7 @@
 #include <iostream>
 #include <windows.h>
 using namespace std;
-char My_Spaceship[2][3] = 
+int My_Spaceship[2][3] = 
     {
         {214,214,214},
         {212,212,212}
@@ -11,6 +11,7 @@ void Print_Spaceship();
 main()
 {
     Print_Border();
+    Print_Spaceship();
 }
 
 void Print_Border()
@@ -39,5 +40,13 @@ void Print_Border()
 }
 void Print_Spaceship()
 {
-    
+    for (int idx = 0; idx < 2;idx++)
+    {
+        for (int itx = 0; itx < 3;itx++)
+        {
+            char c = My_Spaceship[idx][itx];
+            cout << c;
+        }
+        cout << endl;
+    }
 }
