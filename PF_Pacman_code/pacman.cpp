@@ -254,7 +254,7 @@ void erase_pacman(int pacman_x, int pacman_y)
 
 {
     gotoxy(pacman_x, pacman_y);
-    cout << " ";
+    cout << "P";
 }
 void distroy_pacman(int pacman_x,int pacman_y) {
     gotoxy(pacman_x,pacman_y);
