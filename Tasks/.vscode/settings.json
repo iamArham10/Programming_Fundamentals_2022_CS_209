@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "matrix_calculator": "cpp"
+    }
+}

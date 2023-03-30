@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <fstream>
 using namespace std;
-const int sleepSpeed = 800;
+const int sleepSpeed = 500;
 string admin_username = "admin";
 string admin_password = "12345678";
 // user entered admin credentials are stored in the following strings;
@@ -125,176 +125,27 @@ void save_sold_record(string name, string quantity);               // Saves sold
 void show_feature_not_available();
 string getdata(string, int); // To get required data separated by commas in a sentence read from a file.
 // All option functions
-bool To_Take_Order(bool Taking_order)
-{
-    while (Taking_order)
-    {
-        admin_option_Show_inventory();
-        string name;
-        string quantity;
-        cout << "Enter Medicine name:";
-        cin >> name;
-        if (isMedicinePresent(name))
-        {
-            cout << "Enter Quantity: ";
-            cin >> quantity;
-            if (validate_numbers(quantity) && validate_quantity(quantity))
-            {
-                if (Take_Order(name, quantity))
-                {
-                    system("cls");
-                    cout << "Medicine Purchased"<<endl;
-                    save_sold_record(name, quantity);
-                    savemedicinesdatainfile();
-                    save_sold_record_in_file();
-                    Taking_order = false;
-                    Sleep(sleepSpeed);
-                }
-                else
-                {
-
-                    Taking_order = exit_option();
-                }
-            }
-            else
-            {
-                invalid_output();
-                Taking_order = exit_option();
-                Sleep(sleepSpeed);
-            }
-        }
-        else
-        {
-            system("cls");
-            cout << "Medicine not Available" << endl;
-
-            Taking_order = exit_option();
-        }
-    }
-}
-bool To_Add_Medicine(bool Add_Medicine)
-{
-    while (Add_Medicine)
-    {
-        AddMedicine_Menu();
-        if (add_medicine_data())
-        {
-            savemedicinesdatainfile();
-            system("cls");
-            cout << "Medicine is added Successfully";
-            Add_Medicine = false;
-        }
-        else
-        {
-            system("cls");
-            cout << "Medicine is already present" << endl;
-            Sleep(sleepSpeed);
-            Add_Medicine = exit_option();
-        }
-    }
-}
-bool To_Remove_Medicine(bool Removing_Medicine)
-{
-
-    while (Removing_Medicine)
-    {
-        system("cls");
-        admin_header();
-        admin_option_Show_inventory();
-        admin_option_RemoveMedicine();
-        string name;
-        getline(cin >> ws, name);
-        if (remove_medicine(name))
-        {
-            savemedicinesdatainfile();
-            system("cls");
-            cout << "Medicine is Removed";
-            Sleep(sleepSpeed);
-        }
-        else
-        {
-            system("cls");
-            cout << "Medicine you entered is not present in inventory";
-            Sleep(sleepSpeed);
-        }
-
-        Removing_Medicine = false;
-    }
-}
-bool To_Change_Medicine_price(bool Changing_Price)
-{
-    while (Changing_Price)
-    {
-        system("cls");
-        admin_option_Show_inventory();
-        update_medicine_price_option();
-        char selectmedicinenumber = get_option();
-
-        if (validate_option(medicine_number + 1, selectmedicinenumber))
-        {
-            changemedicineprice(selectmedicinenumber);
-            savemedicinesdatainfile();
-            Changing_Price = false;
-        }
-        else
-        {
-            wrong_option();
-            char option = get_option();
-            if (option == '0')
-            {
-                Changing_Price = false;
-                ;
-            }
-        }
-    }
-}
-void show_sales()
-{
-    system("cls");
-    for (int idx = 0; idx < no_of_sold_medicines; idx++)
-    {
-        cout << "Order no : " << idx + 1 << endl;
-        cout << "Medicine name: ";
-        cout << sold_medicines_names[idx] << endl;
-        cout << "Quantities sold: ";
-        cout << sold_medicine_quantities[idx] << endl;
-        cout << "Payment Received: ";
-        cout << amount_received[idx] << endl
-             << endl;
-        cout << "-------------------------------------" << endl;
-    }
-    cout << "Press Any key to Exit";
-    getch();
-}
-bool To_Show_Inventory(bool Showing_Inventory)
-{
-    while (Showing_Inventory)
-    {
-
-        admin_option_Show_inventory();
-        cout << "Press 0 to exit";
-        char get_inventory_exit = get_option();
-        if (get_inventory_exit == '0')
-        {
-            break;
-        }
-    }
-}
-
+void To_Take_Order();
+void To_Add_Medicine();
+void To_Remove_Medicine();
+void To_Change_Medicine_price();
+void show_sales();
+void To_Show_Inventory();
 // main
 main()
 {
     system("cls");
-// Reads Medicine data from a file
-        readmedicinedata();
-        // Reads Sales record from file
-        read_sold_record_from_file();
-        // Reads Employee Credentials from a file
-        read_employee_credentials();
+
+    // Reads Medicine data from a file
+    readmedicinedata();
+    // Reads Sales record from file
+    read_sold_record_from_file();
+    // Reads Employee Credentials from a file
+    read_employee_credentials();
     bool program_running = true;
     while (program_running)
     {
-        
+
         system("cls");
         main_menu();
         // To take main Menu Options from user
@@ -329,24 +180,22 @@ main()
                                 {
                                     if (get_admin_menu_option == '1')
                                     {
-                                        bool Taking_Order = true;
-                                        To_Take_Order(Taking_Order);
+                                       
+                                        To_Take_Order();
                                     }
                                     else if (get_admin_menu_option == '2')
                                     {
-                                        bool addingMedicine = true;
-                                        To_Add_Medicine(addingMedicine);
+                                        
+                                        To_Add_Medicine();
                                     }
                                     else if (get_admin_menu_option == '3')
                                     {
-                                        bool Removing_Medicine = true;
-                                        To_Remove_Medicine(Removing_Medicine);
+                                        To_Remove_Medicine();
                                     }
 
                                     else if (get_admin_menu_option == '4')
                                     {
-                                        bool change_medicine_price = true;
-                                        To_Change_Medicine_price(change_medicine_price);
+                                        To_Change_Medicine_price();
                                     }
                                     else if (get_admin_menu_option == '5')
                                     {
@@ -377,7 +226,8 @@ main()
                                                     else
                                                     {
                                                         system("cls");
-                                                        cout << endl << "Enter 0 to exit or any other key to try again";
+                                                        cout << endl
+                                                             << "Enter 0 to exit or any other key to try again";
                                                         char c = getch();
                                                         if (c == '0')
                                                         {
@@ -406,9 +256,8 @@ main()
                                         }
                                     }
                                     else if (get_admin_menu_option == '7')
-                                    {
-                                        bool showing_inventory = true;
-                                        To_Show_Inventory(showing_inventory);
+                                    {    
+                                        To_Show_Inventory();
                                     }
                                     else if (get_admin_menu_option == '0')
                                     {
@@ -457,8 +306,7 @@ main()
                                 {
                                     if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
                                     {
-                                        bool Taking_Order = true;
-                                        To_Take_Order(Taking_Order);
+                                        To_Take_Order();
                                     }
                                     else
                                     {
@@ -471,8 +319,7 @@ main()
                                 {
                                     if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
                                     {
-                                        bool add_medicine_admin_option = true;
-                                        To_Add_Medicine(add_medicine_admin_option);
+                                        To_Add_Medicine();
                                     }
                                     else
                                     {
@@ -485,8 +332,7 @@ main()
                                 {
                                     if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
                                     {
-                                        bool Removing_Medicine = true;
-                                        To_Remove_Medicine(Removing_Medicine);
+                                        To_Remove_Medicine();
                                     }
                                     else
                                     {
@@ -499,8 +345,7 @@ main()
                                 {
                                     if (check_digit_present(employee_code[GetEmployeeIndex(current_employee_username)], Employee_Menu_Option))
                                     {
-                                        bool Changing_Price = true;
-                                        To_Change_Medicine_price(Changing_Price);
+                                        To_Change_Medicine_price();
                                     }
                                 }
                                 if (Employee_Menu_Option == '5')
@@ -509,8 +354,7 @@ main()
                                 }
                                 if (Employee_Menu_Option == '6')
                                 {
-                                    bool Showing_Inventory = true;
-                                    To_Show_Inventory(Showing_Inventory);
+                                    To_Show_Inventory();
                                 }
                                 if (Employee_Menu_Option == '0')
                                 {
@@ -535,6 +379,158 @@ main()
         }
     }
 }
+void To_Take_Order()
+{
+    bool Taking_order = true;
+    while (Taking_order)
+    {
+        admin_option_Show_inventory();
+        string name;
+        string quantity;
+        cout << "Enter Medicine name:";
+        cin >> name;
+        if (isMedicinePresent(name))
+        {
+            cout << "Enter Quantity: ";
+            cin >> quantity;
+            if (validate_numbers(quantity) && validate_quantity(quantity))
+            {
+                if (Take_Order(name, quantity))
+                {
+                    system("cls");
+                    cout << "Medicine Purchased" << endl;
+                    save_sold_record(name, quantity);
+                    savemedicinesdatainfile();
+                    save_sold_record_in_file();
+                    Taking_order = false;
+                    Sleep(sleepSpeed);
+                }
+                else
+                {
+
+                    Taking_order = exit_option();
+                }
+            }
+            else
+            {
+                invalid_output();
+                Taking_order = exit_option();
+                Sleep(sleepSpeed);
+            }
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine not Available" << endl;
+
+            Taking_order = exit_option();
+        }
+    }
+}
+void To_Add_Medicine()
+{
+    bool Add_Medicine = true;
+    while (Add_Medicine)
+    {
+        AddMedicine_Menu();
+        if (add_medicine_data())
+        {
+            savemedicinesdatainfile();
+            system("cls");
+            cout << "Medicine is added Successfully";
+            Add_Medicine = false;
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine is already present" << endl;
+            Sleep(sleepSpeed);
+            Add_Medicine = exit_option();
+        }
+    }
+}
+void To_Remove_Medicine()
+{
+    bool Removing_Medicine = true;
+    while (Removing_Medicine)
+    {
+        system("cls");
+        admin_header();
+        admin_option_Show_inventory();
+        admin_option_RemoveMedicine();
+        string name;
+        getline(cin >> ws, name);
+        if (remove_medicine(name))
+        {
+            savemedicinesdatainfile();
+            system("cls");
+            cout << "Medicine is Removed";
+            Sleep(sleepSpeed);
+        }
+        else
+        {
+            system("cls");
+            cout << "Medicine you entered is not present in inventory";
+            Sleep(sleepSpeed);
+        }
+
+        Removing_Medicine = false;
+    }
+}
+void To_Change_Medicine_price()
+{
+    bool Changing_Price = true;
+    while (Changing_Price)
+    {
+        system("cls");
+        admin_option_Show_inventory();
+        update_medicine_price_option();
+        char selectmedicinenumber = get_option();
+
+                                            if (validate_option(medicine_number + 1, selectmedicinenumber))
+                                            {
+                                                changemedicineprice(selectmedicinenumber);
+                                                savemedicinesdatainfile();
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                wrong_option();
+                                                char option = get_option();
+                                                if (option == '0')
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (get_admin_menu_option == '5')
+                                    {
+                                        show_sales();
+                                        getch();
+                                    }
+                                    else if (get_admin_menu_option == '6')
+                                    {
+                                        system("cls");
+                                        Admin_option_Employee();
+                                        getch();
+                                    }
+                                    else if (get_admin_menu_option == '7')
+                                    {
+                                        bool showing_inventory = true;
+                                        while (showing_inventory)
+                                        {
+
+        admin_option_Show_inventory();
+        cout << "Press 0 to exit";
+        char get_inventory_exit = get_option();
+        if (get_inventory_exit == '0')
+        {
+            break;
+        }
+    }
+}
+
 // to get required data from a sentence
 string getdata(string sentence, int count)
 {
@@ -778,7 +774,8 @@ bool Take_Order(string name, string quantity)
         else if (intquantity < intremainingmedicines)
         {
             intremainingmedicines = intremainingmedicines - intquantity;
-            cout << endl <<"Your Total is " << intquantity*intmedicineprice << endl;
+            cout << endl
+                 << "Your Total is " << intquantity * intmedicineprice << endl;
             cout << "Press Any key To continue";
             getch();
             medicines_quantities[medicine_index(name)] = integer_to_string(intremainingmedicines);
@@ -1221,9 +1218,6 @@ string take_password(int no_of_characters)
 // to validate number of amount
 bool validate_quantity(string quantity)
 {
-    for (int idx = 0; quantity[idx] != '\0'; idx++)
-    {
-    }
     int Quantity = stoi(quantity);
 
     bool IsValid = true;

@@ -11,7 +11,9 @@ void load_board(char board[][5]);                          // to load the board
 void print_board(char board[][5]);                         // to print the board
 void gotoxy(int x, int y);                                 // to move the output curser on the desired coordinates
 bool isGameEnded(char board[][5]);                         // to check if the game is ended or not
-
+bool check_rows(char board[][5]);
+bool check_columns(char board[][5]);
+bool check_diagonals(char board[][5]);
 main()
 {
     char board[3][5];
@@ -143,6 +145,11 @@ void print_board(char board[][5])
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 07);
 }
 
+bool isGameEnded(char board[][5])
+{
+}
+
+
 void gotoxy(int x, int y)
 {
     COORD coordinates;
@@ -151,3 +158,28 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
 }
 
+
+bool check_rows(char board[][5])
+{
+    bool equal_row = false;
+    for (int idx = 0; idx < 3;idx++)
+    {
+        int temp = board[idx][0];
+        for (int itx = 0; itx < 5;itx = itx + 2)
+        {
+            if (temp == board[idx][itx])
+            {
+                equal_row = true;
+            }
+            else 
+            {
+                equal_row = false;
+            }
+        }
+        if (equal_row = true)
+        {
+            break;
+        }
+    }
+    return equal_row;
+}

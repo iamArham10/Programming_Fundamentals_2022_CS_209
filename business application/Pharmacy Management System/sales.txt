@@ -47,3 +47,4 @@ Panadol,15,14985
 Panadol,10,10000
 Parcetamol,100,100000
 Panadol,1,1000
+Panadol,23,23000
