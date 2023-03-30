@@ -1,0 +1,5 @@
+Press the Following Options
+    
+     1. Start a new game.
+     2. Resume game.
+     3. Exit.

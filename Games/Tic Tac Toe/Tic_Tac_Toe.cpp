@@ -4,6 +4,7 @@
 #include <fstream>
 using namespace std;
 void main_menu();
+void play_game();
 void print_maze();
 void print_main_menu_options();
 void gotoxy(int x, int y);
@@ -19,7 +20,9 @@ main()
         char c = getch();
         if (c == '1')
         {
-            continue;
+            system("cls");
+            play_game();
+            getch();
         }
         else if ( c == '2')
         {
@@ -79,4 +82,22 @@ void print_main_menu_options()
     }
     myfile.close();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 07);
+}
+
+void play_game()
+{
+    main_menu();
+    fstream myfile;
+    myfile.open("play_game_options.txt", ios::in);
+    int x_coordinate = 28;
+    int y_coordinate = 10;
+    string line;
+    while (!myfile.eof())
+    {
+        gotoxy(x_coordinate,y_coordinate);
+        getline(myfile, line);
+        cout << line << endl;
+        y_coordinate++;
+    }
+    myfile.close();
 }
