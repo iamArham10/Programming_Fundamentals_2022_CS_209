@@ -1,0 +1,6 @@
+Press the following Options
+     
+     1. Play the game.
+     2. See Rules.
+     3. Previous Winners.
+     4. Exit.
