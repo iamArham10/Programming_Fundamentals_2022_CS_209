@@ -5,6 +5,7 @@
 using namespace std;
 void main_menu();
 void play_game(char c, char matrix[][3]);
+void newgame(char Matrix[3][3]);
 void print_main_menu_options();
 void load_and_print_play_game_menu();
 void store_empty_matrix(char Matrix[][3]);
@@ -26,7 +27,7 @@ main()
             load_and_print_play_game_menu();
             char c = getch();
             char matrix[3][3];
-            void store_empty_matrix(matrix);
+            store_empty_matrix(matrix);
             play_game(c, matrix);
         }
         else if (c == '2')
@@ -140,4 +141,9 @@ void store_empty_matrix(char Matrix[][3])
             Matrix[row][column] = '-';
         }
     }
+}
+
+void newgame(char Matrix[3][3])
+{
+
 }
